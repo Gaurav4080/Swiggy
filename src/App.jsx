@@ -1,9 +1,10 @@
+import Head from "./components/Head"
 
 function App() {
 
   return (
     <div>
-      Hello World
+      <Head />
     </div>
   )
 }
