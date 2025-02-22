@@ -45,7 +45,7 @@ function Head() {
         <div className='flex items-center gap-14'>
           {
             navItems.map((data) => (
-              <div className='flex items-center gap-3'>
+              <div key={data.name} className='flex items-center gap-3'>
                 <i className={`mt-1 fi text-gray-600 ${data.image}`}></i>
                 <p className='text-xl font-medium text-gray-600'>{data.name}</p>
               </div>
