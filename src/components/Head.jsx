@@ -1,6 +1,34 @@
 import React from 'react'
 
 function Head() {
+
+  const navItems = [
+    {
+      name: "Swiggy Corporate",
+      image: "fi-rr-shopping-bag"
+    },
+    {
+      name: "Search",
+      image: "fi-rr-search"
+    },
+    {
+      name: "Offers",
+      image: "fi-rr-badge-percent"
+    },
+    {
+      name: "Help",
+      image: "fi-rr-info"
+    },
+    {
+      name: "Sign In",
+      image: "fi-bs-user"
+    },
+    {
+      name: "Cart",
+      image: "fi-rr-shopping-cart-add"
+    }
+  ]
+
   return (
     <div className='w-full shadow-md h-24 flex justify-center items-center'>
       <div className=' w-[70%] flex justify-between'>
@@ -14,31 +42,15 @@ function Head() {
           </div>
         </div>
 
-        <div className='flex items-center gap-9'>
-          <div className='flex '>
-            <i className="fi fi-rr-shopping-bag"></i>
-            <p>Swiggy Corporate</p>
-          </div>
-          <div className='flex '>
-            <i className="fi fi-rr-shopping-bag"></i>
-            <p>Search</p>
-          </div>
-          <div className='flex '>
-            <i className="fi fi-rr-shopping-bag"></i>
-            <p>Offers</p>
-          </div>
-          <div className='flex '>
-            <i className="fi fi-rr-shopping-bag"></i>
-            <p>Help</p>
-          </div>
-          <div className='flex '>
-            <i className="fi fi-rr-shopping-bag"></i>
-            <p>Sign In</p>
-          </div>
-          <div className='flex '>
-            <i className="fi fi-rr-shopping-bag"></i>
-            <p>Cart</p>
-          </div>
+        <div className='flex items-center gap-14'>
+          {
+            navItems.map((data) => (
+              <div className='flex items-center gap-3'>
+                <i className={`mt-1 fi text-gray-600 ${data.image}`}></i>
+                <p className='text-xl font-medium text-gray-600'>{data.name}</p>
+              </div>
+            ))
+          }
         </div>
       </div>
     </div>
