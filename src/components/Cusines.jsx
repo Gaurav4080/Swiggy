@@ -1,19 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 
-function Cusines() {
+function Cusines({ data }) {
 
-    const [data, setdata] = useState([])
     const [value, setvalue] = useState(0)
-
-    async function fetchData() {
-        const data = await fetch('https://proxy.corsfix.com/?https://www.swiggy.com/dapi/restaurants/list/v5?lat=19.0759837&lng=72.8776559&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING')
-        const result = await data.json();
-        setdata(result?.data?.cards[0].card?.card?.imageGridCards?.info);
-    }
-
-    useEffect(() => {
-        fetchData()
-    }, [])
 
     function handleNext() {
         value >= 125 ? "" : setvalue((prev) => prev + 32)
@@ -40,10 +29,10 @@ function Cusines() {
                 style={{ translate: `-${value}%` }}
                 className={`flex my-3 duration-300`}>
                 {data.map((item) => (
-                    <img  key={item.imageId} className='w-40' src={`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_288,h_360/${item.imageId}`} alt="" />
+                    <img key={item.imageId} className='w-40' src={`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_288,h_360/${item.imageId}`} alt="" />
                 ))}
             </div>
-            <hr className='border text-gray-300'/>
+            <hr className='border text-gray-300' />
         </div>
     )
 }
