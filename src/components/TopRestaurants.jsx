@@ -28,11 +28,13 @@ function TopRestaurants({ data }) {
 
             <div className={`flex mt-4 my-3 gap-6 duration-300`} style={{ translate: `-${value}%` }}>
                 {
-                    data.map((restaurant) => (
-                        <div key={restaurant.info.id} className='hover:scale-95 duration-300'>
-                            <RestaurantCard {...restaurant} />
-                        </div>
-                    ))
+                    data.map(({ info, cta: { link } }) => {
+                        return (
+                            <div className='hover:scale-95 duration-300' key={info.id} >
+                                <RestaurantCard {...info} link={link} />
+                            </div>
+                        );
+                    })
                 }
             </div>
             <hr className='border text-gray-300' />
