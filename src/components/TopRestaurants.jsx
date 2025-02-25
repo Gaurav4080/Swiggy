@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import RestaurantCard from './RestaurantCard'
 
 function TopRestaurants({ data }) {
-
     const [value, setvalue] = useState(0)
 
     function handleNext() {

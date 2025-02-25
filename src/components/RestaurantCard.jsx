@@ -1,8 +1,9 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 function RestaurantCard(restaurant) {
     return (
-        <>
+        <Link to={`/RestaurantMenu/${restaurant?.info?.id}`}>
             <div className='min-w-[295px] h-[182px] relative'>
                 <img className='w-full h-full rounded-2xl object-cover' src={`https://media-assets.swiggy.com/swiggy/image/upload/${restaurant.info.cloudinaryImageId}`} alt="" />
                 <div className='bg-gradient-to-t from-black from-1% to-transparent to-40% rounded-2xl w-full h-full absolute top-0'></div>
@@ -17,9 +18,8 @@ function RestaurantCard(restaurant) {
                 <p className='flex items-center mt-1 gap-1 font-bold text-green-700'><i className="fi fi-ss-circle-star text-green-600 text-lg"></i> {restaurant.info.avgRating}<span className='mb-2 text'> . </span><span>{restaurant.info.sla.slaString}</span></p>
                 <p className='line-clamp-1 overflow-hidden text-ellipsis'>{restaurant.info.cuisines.join(", ")}</p>
                 <p className='line-clamp-1 overflow-hidden text-ellipsis font-semibold'>{restaurant.info.locality}</p>
-                <p>{console.log(restaurant)}</p>
             </div>
-        </>
+        </Link>
     )
 }
 
