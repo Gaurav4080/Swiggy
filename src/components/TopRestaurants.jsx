@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import RestaurantCard from './RestaurantCard'
 
 function TopRestaurants({ data }) {
 
@@ -26,17 +27,15 @@ function TopRestaurants({ data }) {
                 </div>
             </div>
 
-            <div className={`flex mt-4 my-10 gap-6 duration-300`} style={{ translate: `-${value}%` }}>
+            <div className={`flex mt-4 my-3 gap-6 duration-300`} style={{ translate: `-${value}%` }}>
                 {
                     data.map((restaurant) => (
-                        <div key={restaurant.info.id} className='min-w-[295px] h-[182px] relative'>
-                            <img className='w-full h-full rounded-2xl object-cover' src={`https://media-assets.swiggy.com/swiggy/image/upload/${restaurant.info.cloudinaryImageId}`} alt="" />
-                            <div className='bg-gradient-to-t from-black from-1% to-transparent to-40% rounded-2xl w-full h-full absolute top-0'></div>
+                        <div key={restaurant.info.id} className='hover:scale-95 duration-300'>
+                            <RestaurantCard {...restaurant} />
                         </div>
                     ))
                 }
             </div>
-
             <hr className='border text-gray-300' />
         </div>
     )
