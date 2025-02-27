@@ -24,7 +24,8 @@ function RestaurantMenu() {
 
         setResInfo(result?.data?.cards[2]?.card?.card?.info)
         setDiscountData(result?.data?.cards[3]?.card?.card?.gridElements?.infoWithStyle?.offers)
-        let actualMenu = (result?.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards).filter((data) => data?.card?.card?.itemCards)
+        let actualMenu = (result?.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards).filter((data) => data?.card?.card?.itemCards || data?.card?.card?.categories)
+        console.log(actualMenu);
         setMenuData(actualMenu)
     }
 
@@ -94,8 +95,8 @@ function RestaurantMenu() {
 
                 <div>
                     {menuData.map(({
-                        card: { card: { itemCards, title, categoryId } } }) => {
-                        return <MenuCard title={title} itemCards={itemCards} key={categoryId} />
+                        card: { card } }) => {
+                        return <MenuCard key={card.categoryId} card={card} />
                     })}
                 </div>
             </div>
@@ -115,26 +116,42 @@ function Discount({ data: { info: { header, offerLogo, couponCode } } }) {
     )
 }
 
-function MenuCard({ itemCards, title, categoryId }) {
+function MenuCard({ card }) {
 
-    const [isOpen, setIsOpen] = useState(true)
+    let state = card["@type"] ? true : false;
+    const [isOpen, setIsOpen] = useState(state)
 
-    function toggleDropdown(){
+    function toggleDropdown() {
         setIsOpen((prev) => !prev)
     }
 
-    return (
-        <div>
-            <div className='flex justify-between mt-7'>
-                <h1>{title} ({itemCards.length})</h1>
-                <i className="fi text-2xl fi-br-angle-small-down" onClick={toggleDropdown}></i>
+    if (card.itemCards) {
+        const { title, itemCards } = card;
+        return (
+            <div>
+                <div className='flex justify-between mt-7'>
+                    <h1>{title} ({itemCards.length})</h1>
+                    <i className="fi text-2xl fi-br-angle-small-down" onClick={toggleDropdown}></i>
+                </div>
+                {
+                    isOpen &&
+                    <DetailMenu itemCards={itemCards} />
+                }
             </div>
-            {
-                isOpen && 
-                <DetailMenu itemCards={itemCards} />
-            }
-        </div>
-    )
+        )
+    } else {
+        const { title, categories } = card;
+        return (
+            <div>
+                <h1>{title}</h1>
+                {
+                    categories.map((data) => {
+                        return <MenuCard key={data.categoryId} card={data} />
+                    })
+                }
+            </div>
+        )
+    }
 }
 
 function DetailMenu({ itemCards }) {
