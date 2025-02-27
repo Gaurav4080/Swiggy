@@ -8,9 +8,15 @@ function RestaurantMenu() {
     const [resInfo, setResInfo] = useState([])
     const [discountData, setDiscountData] = useState([])
     const [menuData, setMenuData] = useState([])
+    const [value, setValue] = useState(0)
 
-    console.log(resInfo);
+    function handleNext() {
+        value >= 90 ? "" : setValue((prev) => prev + 38)
+    }
 
+    function handlePrev() {
+        value <= 0 ? "" : setValue((prev) => prev - 38)
+    }
 
     async function fetchMenu() {
         const data = await fetch(`https://proxy.corsfix.com/?https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=28.5355161&lng=77.3910265&restaurantId=${mainId}&catalog_qa=undefined&submitAction=ENTER`)
@@ -18,7 +24,8 @@ function RestaurantMenu() {
 
         setResInfo(result?.data?.cards[2]?.card?.card?.info)
         setDiscountData(result?.data?.cards[3]?.card?.card?.gridElements?.infoWithStyle?.offers)
-        setMenuData(result?.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[1]?.card?.card)
+        let actualMenu = (result?.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards).filter((data) => data?.card?.card?.itemCards)
+        setMenuData(actualMenu)
     }
 
     useEffect(() => {
@@ -55,9 +62,89 @@ function RestaurantMenu() {
                         </div>
                     </div>
                 </div>
+
+                <div className='w-full overflow-hidden'>
+                    <div className='flex justify-between mt-8'>
+                        <h1 className='font-bold text-xl'>Deals for you</h1>
+                        <div className='flex gap-3'>
+                            <div onClick={handlePrev} className={`cursor-pointer rounded-full h-9 w-9 flex justify-center items-center ${value <= 0 ? "bg-gray-100" : "bg-gray-200"}`}>
+                                <i className={`fi text-2xl mt-1 fi-rr-arrow-small-left ${value <= 0 ? "text-gray-400" : "text-gray-800"}`}></i>
+                            </div>
+                            <div onClick={handleNext} className={`cursor-pointer rounded-full h-9 w-9 flex justify-center items-center ${value >= 90 ? "bg-gray-100" : "bg-gray-200"}`}>
+                                <i className={`fi text-2xl mt-1 fi-rr-arrow-small-right ${value >= 90 ? "text-gray-400" : "text-gray-800"}`}></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div style={{ translate: `-${value}%` }}
+                        className='flex gap-4 mt-5 duration-300'>
+                        {
+                            discountData.map((info) => {
+                                return <Discount key={info.info.offerIds[0]} data={info} />
+                            })
+                        }
+                    </div>
+                </div>
+
+                <h2 className='text-center mt-5 leading-5'>Menu</h2>
+
+                <div className='w-full mt-5 relative cursor-pointer'>
+                    <div className='w-full p-3 rounded-xl font-semibold text-sl text-slate-600 bg-slate-100 text-center'>Search for Dishes</div>
+                    <i className="fi fi-br-search absolute text-slate-500 top-3 right-5"></i>
+                </div>
+
+                <div>
+                    {menuData.map(({
+                        card: { card: { itemCards, title, categoryId } } }) => {
+                        return <MenuCard title={title} itemCards={itemCards} key={categoryId} />
+                    })}
+                </div>
             </div>
         </div>
     )
+}
+
+function Discount({ data: { info: { header, offerLogo, couponCode } } }) {
+    return (
+        <div className='flex gap-2 items-center min-w-[328px] h-[66px] border p-3 rounded-2xl'>
+            <img src={`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_46,h_46/${offerLogo}`} alt="" />
+            <div>
+                <h2 className='font-bold text-[18px]'>{header}</h2>
+                <p className='text-[15px] text-slate-400 font-bold'>{couponCode ? couponCode : "Apply Now!"}</p>
+            </div>
+        </div>
+    )
+}
+
+function MenuCard({ itemCards, title, categoryId }) {
+
+    const [isOpen, setIsOpen] = useState(true)
+
+    function toggleDropdown(){
+        setIsOpen((prev) => !prev)
+    }
+
+    return (
+        <div>
+            <div className='flex justify-between mt-7'>
+                <h1>{title} ({itemCards.length})</h1>
+                <i className="fi text-2xl fi-br-angle-small-down" onClick={toggleDropdown}></i>
+            </div>
+            {
+                isOpen && 
+                <DetailMenu itemCards={itemCards} />
+            }
+        </div>
+    )
+}
+
+function DetailMenu({ itemCards }) {
+    return (
+        <div className='m-5'>
+            {itemCards.map(({ card: { info: { name, id } } }) => (
+                <h1 key={id}>{name}</h1>
+            ))}
+        </div>
+    );
 }
 
 export default RestaurantMenu
