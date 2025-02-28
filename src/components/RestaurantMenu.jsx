@@ -118,7 +118,7 @@ function Discount({ data: { info: { header, offerLogo, couponCode } } }) {
 
 function MenuCard({ card }) {
 
-    let state = card["@type"] ? true : false;
+    let state = !!card["@type"];
     const [isOpen, setIsOpen] = useState(state)
 
     function toggleDropdown() {
@@ -131,7 +131,7 @@ function MenuCard({ card }) {
             <div>
                 <div className='flex justify-between mt-7'>
                     <h1>{title} ({itemCards.length})</h1>
-                    <i className="fi text-2xl fi-br-angle-small-down" onClick={toggleDropdown}></i>
+                    <i className={`fi text-2xl ${isOpen ? 'fi-br-angle-small-up' : 'fi-br-angle-small-down'}`} onClick={toggleDropdown}></i>
                 </div>
                 {
                     isOpen &&
