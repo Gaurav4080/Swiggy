@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
+let veg = "https://www.pngkey.com/png/detail/261-2619381_chitr-veg-symbol-svg-veg-and-non-veg.png"
+let nonVeg = "https://www.pngkey.com/png/full/245-2459071_non-veg-icon-non-veg-symbol-png.png"
+
 function RestaurantMenu() {
     const { id } = useParams();
     let mainId = id.split("-").at(-1).split("t").at(-1);
@@ -25,7 +28,6 @@ function RestaurantMenu() {
         setResInfo(result?.data?.cards[2]?.card?.card?.info)
         setDiscountData(result?.data?.cards[3]?.card?.card?.gridElements?.infoWithStyle?.offers)
         let actualMenu = (result?.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards).filter((data) => data?.card?.card?.itemCards || data?.card?.card?.categories)
-        console.log(actualMenu);
         setMenuData(actualMenu)
     }
 
@@ -128,22 +130,25 @@ function MenuCard({ card }) {
     if (card.itemCards) {
         const { title, itemCards } = card;
         return (
-            <div>
-                <div className='flex justify-between mt-7'>
-                    <h1>{title} ({itemCards.length})</h1>
-                    <i className={`fi text-2xl ${isOpen ? 'fi-br-angle-small-up' : 'fi-br-angle-small-down'}`} onClick={toggleDropdown}></i>
+            <>
+                <div>
+                    <div className='flex justify-between mt-7'>
+                        <h1 className={'font-bold text-' + (card["@type"] ? 'xl' : 'base')}>{title} ({itemCards.length})</h1>
+                        <i className={`fi text-2xl ${isOpen ? 'fi-br-angle-small-up' : 'fi-br-angle-small-down'}`} onClick={toggleDropdown}></i>
+                    </div>
+                    {
+                        isOpen &&
+                        <DetailMenu itemCards={itemCards} />
+                    }
                 </div>
-                {
-                    isOpen &&
-                    <DetailMenu itemCards={itemCards} />
-                }
-            </div>
+                <hr className={`my-5 border-${card["@type"] ? '[10px]' : '[4px]'} text-slate-200`} />
+            </>
         )
     } else {
         const { title, categories } = card;
         return (
             <div>
-                <h1>{title}</h1>
+                <h1 className='font-bold text-[25px]'>{title}</h1>
                 {
                     categories.map((data) => {
                         return <MenuCard key={data.categoryId} card={data} />
@@ -155,13 +160,37 @@ function MenuCard({ card }) {
 }
 
 function DetailMenu({ itemCards }) {
+    const [showMore, setShowMore] = useState(false);
     return (
         <div className='m-5'>
-            {itemCards.map(({ card: { info: { name, id } } }) => (
-                <h1 key={id}>{name}</h1>
-            ))}
+            {itemCards.map(({ card: { info: { name, defaultPrice, price, itemAttribute: { vegClassifier }, description, imageId } } }
+
+            ) => {
+                // console.log();
+                return (
+                    <>
+                        <div key={imageId} className='flex w-full justify-between min-h-[182px]'>
+                            <div className='w-[70%]'>
+                                <img className='w-5' src={(vegClassifier === veg ? veg : nonVeg)} alt="" />
+                                <h2 className='font-bold text-lg'>{name}</h2>
+                                <p className='font-bold text-lg italic'>₹ {defaultPrice / 100 || price / 100}</p>
+                                <div>
+                                    <span className='line-clamp-2'>{description}</span>
+                                    <span><button onClick={() => setShowMore(!showMore)} className=' cursor-pointer font-bold text-gray-600 '>{showMore ? "less" : "more"}</button></span>
+                                </div>
+
+                            </div>
+                            <div className='w-[20%] relative h-full'>
+                                <img className='rounded-xl' src={`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_300,h_300,c_fit/${imageId}`} alt="" />
+                                <button className='bg-slate-100 text-lg font-bold border px-10 text-green-600 drop-shadow-2xl rounded-xl absolute bottom-[-20px] left-4 py-2'>ADD</button>
+                            </div>
+                        </div>
+                        <hr className='my-5 text-slate-300 border-1' />
+                    </>
+                )
+            })}
         </div>
     );
 }
 
-export default RestaurantMenu
+export default RestaurantMenu  
