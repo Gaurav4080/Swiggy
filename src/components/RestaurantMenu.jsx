@@ -160,13 +160,12 @@ function MenuCard({ card }) {
 }
 
 function DetailMenu({ itemCards }) {
-    const [showMore, setShowMore] = useState(false);
     return (
         <div className='m-5'>
-            {itemCards.map(({ card: { info: { name, defaultPrice, price, itemAttribute: { vegClassifier }, description, imageId } } }
+            {itemCards.map(({ card: { info: { name, defaultPrice, price, itemAttribute: { vegClassifier }, description, imageId } } }) => {
+                const [showMore, setShowMore] = useState(false);
+                let trimDes = (description && typeof description === "string" ? (description.substring(0, 130) + "...") : "");
 
-            ) => {
-                // console.log();
                 return (
                     <>
                         <div key={imageId} className='flex w-full justify-between min-h-[182px]'>
@@ -174,16 +173,19 @@ function DetailMenu({ itemCards }) {
                                 <img className='w-5' src={(vegClassifier === veg ? veg : nonVeg)} alt="" />
                                 <h2 className='font-bold text-lg'>{name}</h2>
                                 <p className='font-bold text-lg italic'>₹ {defaultPrice / 100 || price / 100}</p>
-                                <div>
-                                    <span className='line-clamp-2'>{description}</span>
-                                    <span><button onClick={() => setShowMore(!showMore)} className=' cursor-pointer font-bold text-gray-600 '>{showMore ? "less" : "more"}</button></span>
-                                </div>
+                                {trimDes && (
+                                    <div>
+                                        <span>{showMore ? description : trimDes}</span>
+                                        {trimDes.length >= 50 && (
+                                            <button onClick={() => setShowMore(!showMore)} className="cursor-pointer mx-1 font-bold text-gray-600"> {showMore ? "less" : "more"} </button>
+                                        )}
+                                    </div>
+                                )}
 
                             </div>
                             <div className='w-[20%] relative h-full'>
                                 <img className='rounded-xl' src={`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_300,h_300,c_fit/${imageId}`} alt="" />
-                                <button className='bg-slate-100 text-lg font-bold border px-10 text-green-600 drop-shadow-2xl rounded-xl absolute bottom-[-20px] left-4 py-2'>ADD</button>
-                            </div>
+                                <button className={`bg-slate-100 text-lg font-bold border px-10 text-green-600 drop-shadow-2xl rounded-xl absolute left-4 py-2 ${imageId ? 'bottom-[-20px]' : 'top-[30px]'}`}>ADD</button>                            </div>
                         </div>
                         <hr className='my-5 text-slate-300 border-1' />
                     </>
