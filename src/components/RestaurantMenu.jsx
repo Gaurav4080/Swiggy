@@ -10,6 +10,7 @@ function RestaurantMenu() {
 
     const [resInfo, setResInfo] = useState([])
     const [discountData, setDiscountData] = useState([])
+    // const [topPicksData, setTopPicksData] = useState(null)
     const [menuData, setMenuData] = useState([])
     const [value, setValue] = useState(0)
 
@@ -24,11 +25,11 @@ function RestaurantMenu() {
     async function fetchMenu() {
         const data = await fetch(`https://proxy.corsfix.com/?https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=28.5355161&lng=77.3910265&restaurantId=${mainId}&catalog_qa=undefined&submitAction=ENTER`)
         const result = await data.json()
-
         setResInfo(result?.data?.cards[2]?.card?.card?.info)
         setDiscountData(result?.data?.cards[3]?.card?.card?.gridElements?.infoWithStyle?.offers)
         let actualMenu = (result?.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards).filter((data) => data?.card?.card?.itemCards || data?.card?.card?.categories)
         setMenuData(actualMenu)
+        // setTopPicksData((result?.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards).filter(data => data?.card?.card?.title === "Top Picks")[0])
     }
 
     useEffect(() => {
@@ -94,6 +95,35 @@ function RestaurantMenu() {
                     <div className='w-full p-3 rounded-xl font-semibold text-sl text-slate-600 bg-slate-100 text-center'>Search for Dishes</div>
                     <i className="fi fi-br-search absolute text-slate-500 top-3 right-5"></i>
                 </div>
+
+                {/* {
+                    topPicksData &&
+                    <div className='w-full overflow-hidden'>
+                        <div className='flex justify-between mt-8'>
+                            <h1 className='font-bold text-xl'>{topPicksData?.card?.card?.title}</h1>
+                            <div className='flex gap-3'>
+                                <div onClick={handlePrev} className={`cursor-pointer rounded-full h-9 w-9 flex justify-center items-center ${value <= 0 ? "bg-gray-100" : "bg-gray-200"}`}>
+                                    <i className={`fi text-2xl mt-1 fi-rr-arrow-small-left ${value <= 0 ? "text-gray-400" : "text-gray-800"}`}></i>
+                                </div>
+                                <div onClick={handleNext} className={`cursor-pointer rounded-full h-9 w-9 flex justify-center items-center ${value >= 90 ? "bg-gray-100" : "bg-gray-200"}`}>
+                                    <i className={`fi text-2xl mt-1 fi-rr-arrow-small-right ${value >= 90 ? "text-gray-400" : "text-gray-800"}`}></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style={{ translate: `-${value}%` }}
+                            className='flex gap-4 mt-5 duration-300'>
+                            {
+                                topPicksData.card.card.carousel.map(({ creativeId, dish: { info: { defaultPrice, price} } }) => {
+                                    return 
+                                    <div>
+                                        <img src="" alt="" />
+                                    </div>
+                                })
+                            }
+                        </div>
+                    </div>
+                } */}
 
                 <div>
                     {menuData.map(({
@@ -162,34 +192,43 @@ function MenuCard({ card }) {
 function DetailMenu({ itemCards }) {
     return (
         <div className='m-5'>
-            {itemCards.map(({ card: { info: { name, defaultPrice, price, itemAttribute: { vegClassifier }, description, imageId } } }) => {
+            {itemCards.map(({ card: { info } }, index) => {
+                const { name, defaultPrice, price, itemAttribute, description, imageId } = info;
+                const vegClassifier = itemAttribute?.vegClassifier;
+                const key = `item-${index}`;
                 const [showMore, setShowMore] = useState(false);
-                let trimDes = (description && typeof description === "string" ? (description.substring(0, 130) + "...") : "");
+                let trimDes = description ? description.substring(0, 130) + "..." : "";
 
                 return (
-                    <>
-                        <div key={imageId} className='flex w-full justify-between min-h-[182px]'>
+                    <div key={key}>
+                        <div className='flex w-full justify-between min-h-[182px]'>
                             <div className='w-[70%]'>
-                                <img className='w-5' src={(vegClassifier === veg ? veg : nonVeg)} alt="" />
+                                <img className='w-5' src={vegClassifier === "veg" ? veg : nonVeg} alt="" />
                                 <h2 className='font-bold text-lg'>{name}</h2>
                                 <p className='font-bold text-lg italic'>₹ {defaultPrice / 100 || price / 100}</p>
                                 {trimDes && (
                                     <div>
                                         <span>{showMore ? description : trimDes}</span>
                                         {trimDes.length >= 50 && (
-                                            <button onClick={() => setShowMore(!showMore)} className="cursor-pointer mx-1 font-bold text-gray-600"> {showMore ? "less" : "more"} </button>
+                                            <button
+                                                onClick={() => setShowMore(!showMore)}
+                                                className="cursor-pointer mx-1 font-bold text-gray-600"
+                                            >
+                                                {showMore ? "less" : "more"}
+                                            </button>
                                         )}
                                     </div>
                                 )}
-
                             </div>
                             <div className='w-[20%] relative h-full'>
-                                <img className='rounded-xl' src={`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_300,h_300,c_fit/${imageId}`} alt="" />
-                                <button className={`bg-slate-100 text-lg font-bold border px-10 text-green-600 drop-shadow-2xl rounded-xl absolute left-4 py-2 ${imageId ? 'bottom-[-20px]' : 'top-[30px]'}`}>ADD</button>                            </div>
+                                {imageId &&
+                                    <img className='rounded-xl' src={`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_300,h_300,c_fit/${imageId}`} alt="" />}
+                                <button className={`bg-slate-100 text-lg font-bold border px-10 text-green-600 drop-shadow-2xl rounded-xl absolute left-4 py-2 ${imageId ? 'bottom-[-20px]' : 'top-[30px]'}`}> ADD </button>
+                            </div>
                         </div>
                         <hr className='my-5 text-slate-300 border-1' />
-                    </>
-                )
+                    </div>
+                );
             })}
         </div>
     );
