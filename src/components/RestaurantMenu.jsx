@@ -10,7 +10,7 @@ function RestaurantMenu() {
 
     const [resInfo, setResInfo] = useState([])
     const [discountData, setDiscountData] = useState([])
-    // const [topPicksData, setTopPicksData] = useState(null)
+    const [topPicksData, setTopPicksData] = useState(null)
     const [menuData, setMenuData] = useState([])
     const [value, setValue] = useState(0)
 
@@ -28,8 +28,8 @@ function RestaurantMenu() {
         setResInfo(result?.data?.cards[2]?.card?.card?.info)
         setDiscountData(result?.data?.cards[3]?.card?.card?.gridElements?.infoWithStyle?.offers)
         let actualMenu = (result?.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards).filter((data) => data?.card?.card?.itemCards || data?.card?.card?.categories)
+        setTopPicksData((result?.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards).filter(data => data.card.card.title == "Top Picks")[0])
         setMenuData(actualMenu)
-        // setTopPicksData((result?.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards).filter(data => data?.card?.card?.title === "Top Picks")[0])
     }
 
     useEffect(() => {
@@ -88,6 +88,31 @@ function RestaurantMenu() {
                         }
                     </div>
                 </div>
+
+                {topPicksData &&
+                    <div className='w-full overflow-hidden'>
+                        <div className='flex justify-between mt-8'>
+                            <h1 className='font-bold text-xl'>{topPicksData.card.card.title}</h1>
+                            <div className='flex gap-3'>
+                                <div onClick={handlePrev} className={`cursor-pointer rounded-full h-9 w-9 flex justify-center items-center ${value <= 0 ? "bg-gray-100" : "bg-gray-200"}`}>
+                                    <i className={`fi text-2xl mt-1 fi-rr-arrow-small-left ${value <= 0 ? "text-gray-400" : "text-gray-800"}`}></i>
+                                </div>
+                                <div onClick={handleNext} className={`cursor-pointer rounded-full h-9 w-9 flex justify-center items-center ${value >= 90 ? "bg-gray-100" : "bg-gray-200"}`}>
+                                    <i className={`fi text-2xl mt-1 fi-rr-arrow-small-right ${value >= 90 ? "text-gray-400" : "text-gray-800"}`}></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="flex gap-4 mt-5 overflow-x-auto flex-nowrap">
+                            {topPicksData?.card?.card?.carousel?.map(({ creativeId }) => (
+                                <div key={creativeId} className="min-w-[300px] flex-shrink-0">
+                                    <img className="w-[384px] h-[395px]" src={`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_292,h_300/${creativeId}`} alt="" />
+                                </div>
+                            ))}
+                        </div>
+
+                    </div>
+                }
 
                 <h2 className='text-center mt-5 leading-5'>Menu</h2>
 
