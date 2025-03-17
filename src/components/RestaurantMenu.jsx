@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import { Coordinates } from '../context/contextApi'
 
 let veg = "https://www.pngkey.com/png/detail/261-2619381_chitr-veg-symbol-svg-veg-and-non-veg.png"
 let nonVeg = "https://www.pngkey.com/png/full/245-2459071_non-veg-icon-non-veg-symbol-png.png"
@@ -13,6 +14,7 @@ function RestaurantMenu() {
     const [topPicksData, setTopPicksData] = useState(null)
     const [menuData, setMenuData] = useState([])
     const [value, setValue] = useState(0)
+    const {coord: {lat, lng}} = useContext(Coordinates)
 
     function handleNext() {
         value >= 90 ? "" : setValue((prev) => prev + 38)
@@ -23,7 +25,7 @@ function RestaurantMenu() {
     }
 
     async function fetchMenu() {
-        const data = await fetch(`https://proxy.corsfix.com/?https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=28.5355161&lng=77.3910265&restaurantId=${mainId}&catalog_qa=undefined&submitAction=ENTER`)
+        const data = await fetch(`https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=28.5355161&lng=77.3910265&restaurantId=${mainId}&catalog_qa=undefined&submitAction=ENTER`)
         const result = await data.json()
         setResInfo(result?.data?.cards[2]?.card?.card?.info)
         setDiscountData(result?.data?.cards[3]?.card?.card?.gridElements?.infoWithStyle?.offers)
