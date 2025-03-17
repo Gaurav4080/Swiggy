@@ -35,7 +35,7 @@ function Head() {
   const [address, setAddress] = useState("")
   const { visible, setVisible } = useContext(Visibility)
   const { setCoord } = useContext(Coordinates)
-
+  const [headerLocation, setHeaderLocation] = useState("Others")
 
   function handleVisbility() {
     setVisible(prev => !prev)
@@ -50,6 +50,7 @@ function Head() {
 
   async function fetchlatAndLong(id) {
     if (id == "") return
+    handleVisbility()
     const res = await fetch(`https://www.swiggy.com/dapi/misc/address-recommend?place_id=${id}`);
     const data = await res.json();
     setCoord({
@@ -57,8 +58,7 @@ function Head() {
       lng: data.data[0].geometry.location.lng
     })
     setAddress(data.data[0].formatted_address)
-    console.log(data);
-
+    setHeaderLocation(data?.data[0]?.address_components[0]?.long_name)
   }
 
   return (
@@ -74,6 +74,7 @@ function Head() {
               {searchResult.map((data) => (
                 <li onClick={() => fetchlatAndLong(data.place_id)}>{data.structured_formatting.main_text}
                   <p className='text-sm opacity-65'>{data.structured_formatting.secondary_text}</p>
+                  console.log(data);
                 </li>
               ))}
             </ul>
@@ -89,7 +90,7 @@ function Head() {
               <img className='w-20' src="https://1000logos.net/wp-content/uploads/2021/05/Swiggy-emblem.png" alt="" />
             </Link>
             <div className='flex items-center gap-1' onClick={handleVisbility}>
-            <p className={`line-clamp-1 ${address ? "text-[15px]" : "font-bold border-b-2 border-black"}`}>{(address ? address : "others").substring(0, 35)}</p>
+            <p><span className="font-semibold text-[15px] mr-1 border-b-2 border-black">{headerLocation}</span> <span className={address ? "text-[15px]" : ""}>{address && (address.length > 25 ? address.substring(0, 25) + "..." : address)}</span></p>
             <i className="fi text-1.5xl text-gray-900 mt-2 fi-rr-angle-small-down"></i>
             </div>
           </div>
@@ -98,8 +99,8 @@ function Head() {
             {
               navItems.map((data) => (
                 <div key={data.name} className='flex items-center gap-2'>
-                  <i className={`mt-1 fi text-gray-600 ${data.image}`}></i>
-                  <p className='text-xl font-medium text-gray-600'>{data.name}</p>
+                  <i className={`mt-1 fi font-semibold text-black ${data.image}`}></i>
+                  <p className='text-l font-semibold text-black'>{data.name}</p>
                 </div>
               ))
             }

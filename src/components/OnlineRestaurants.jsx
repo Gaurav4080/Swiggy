@@ -1,11 +1,11 @@
 import React from 'react'
 import RestaurantCard from './RestaurantCard'
 
-function OnlineRestaurants({ data }) {
+function OnlineRestaurants({ data, title }) {
     return (
         <div>
-            <h1 className='font-bold text-3xl my-10'>Restaurants with online food delivery in Mumbai</h1>
-            <div className='grid grid-cols-4 gap-25'>
+            <h1 className='font-bold text-2xl mt-10 my-5'>{title}</h1>
+            <div className='grid grid-cols-4 gap-5'>
                 {
                     data.map(({ info, cta: { link } }) => {
                         return (

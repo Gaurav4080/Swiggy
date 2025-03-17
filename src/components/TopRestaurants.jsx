@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import RestaurantCard from './RestaurantCard'
 
-function TopRestaurants({ data }) {
+function TopRestaurants({ data, title }) {
     const [value, setvalue] = useState(0)
 
     function handleNext() {
@@ -13,9 +13,9 @@ function TopRestaurants({ data }) {
     }
 
     return (
-        <div className='mt-14 w-full'>
-            <div className='flex justify-between mt-5'>
-                <h1 className='font-bold text-3xl'>Top restaurant chains in Mumbai</h1>
+        <div className='mt-10 w-full'>
+            <div className='flex justify-between'>
+                <h1 className='font-bold text-2xl'>{title}</h1>
                 <div className='flex gap-3'>
                     <div onClick={handlePrev} className={`cursor-pointer rounded-full h-9 w-9 flex justify-center items-center ${value <= 0 ? "bg-gray-100" : "bg-gray-200"}`}>
                         <i className={`fi text-2xl mt-1 fi-rr-arrow-small-left ${value <= 0 ? "text-gray-400" : "text-gray-800"}`}></i>

@@ -8,6 +8,8 @@ function Body() {
 
     const [restaurantData, setRestaurantData] = useState([])
     const [cusineData, setCusineData] = useState([])
+    const [topRestaurantTitle, setTopRestaurantTitle] = useState("")
+    const [onlineRestaurantTitle, setOnlineRestaurantTitle] = useState("")
     const {coord: {lat, lng}} = useContext(Coordinates)
 
     async function fetchData() {
@@ -15,6 +17,8 @@ function Body() {
         const result = await data.json();
         setRestaurantData(result?.data?.cards[1].card?.card?.gridElements?.infoWithStyle?.restaurants);
         setCusineData(result?.data?.cards[0].card?.card?.imageGridCards?.info);
+        setTopRestaurantTitle(result?.data?.cards[1].card?.card?.header?.title);
+        setOnlineRestaurantTitle(result?.data?.cards[2].card?.card?.title);
     }
 
     useEffect(() => {
@@ -25,8 +29,8 @@ function Body() {
         <div className='w-full'>
             <div className='w-[75%] mx-auto mt-2 overflow-hidden'>
                 <Cusines data={cusineData} />
-                <TopRestaurants data={restaurantData} />
-                <OnlineRestaurants data={restaurantData} />
+                <TopRestaurants data={restaurantData} title={topRestaurantTitle} />
+                <OnlineRestaurants data={restaurantData} title={onlineRestaurantTitle} />
             </div>
         </div>
     )
