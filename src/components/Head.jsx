@@ -66,18 +66,29 @@ function Head() {
 
       <div className='w-full'>
         <div onClick={handleVisbility} className={"w-full bg-black/50 h-full z-30 absolute " + (visible ? "visible " : "invisible")}></div>
-        <div className={'bg-white w-[40%] h-full p-5 absolute z-40 duration-500 ' + (visible ? "left-0" : "-left-[100%]")}>
-          <p className='bg-black text-white p-5 w-[10%]' onClick={handleVisbility}>Cut</p>
-          <input type="text" className="border p-5 focus:outline-none focus:shadow-lg rounded-md" onChange={(e) => searchResultData(e.target.value)} />
-          <div>
-            <ul>
-              {searchResult.map((data) => (
-                <li onClick={() => fetchlatAndLong(data.place_id)}>{data.structured_formatting.main_text}
-                  <p className='text-sm opacity-65'>{data.structured_formatting.secondary_text}</p>
-                  console.log(data);
-                </li>
-              ))}
-            </ul>
+        <div className={'bg-white w-[40%] flex justify-end h-full p-5 absolute z-40 duration-500 ' + (visible ? "left-0" : "-left-[100%]")}>
+          <div className='flex flex-col gap-4 w-[70%] mr-6'>
+            <i class="fi fi-rr-cross-small text-3xl text-gray-600" onClick={handleVisbility}></i>
+            <input type="text" className="border p-5 focus:outline-none focus:shadow-lg" onChange={(e) => searchResultData(e.target.value)} />
+            <div className='p-5 pt-2'>
+              <ul>
+                {searchResult.map((data, index) => {
+                  const isLast = index === searchResult.length - 1;
+                  return (
+                    <div className="my-5" key={data.place_id}>
+                      <div className="flex gap-3">
+                        <i className="mt-1 fi fi-rr-marker"></i>
+                        <li onClick={() => fetchlatAndLong(data.place_id)}>
+                          {data.structured_formatting.main_text}
+                          <p className="text-sm opacity-65">{data.structured_formatting.secondary_text}</p>
+                        </li>
+                      </div>
+                      {!isLast && <p className="opacity-40">---------------------------------------------------------</p>}
+                    </div>
+                  );
+                })}
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -90,8 +101,8 @@ function Head() {
               <img className='w-20' src="https://1000logos.net/wp-content/uploads/2021/05/Swiggy-emblem.png" alt="" />
             </Link>
             <div className='flex items-center gap-1' onClick={handleVisbility}>
-            <p><span className="font-semibold text-[15px] mr-1 border-b-2 border-black">{headerLocation}</span> <span className={address ? "text-[15px]" : ""}>{address && (address.length > 25 ? address.substring(0, 25) + "..." : address)}</span></p>
-            <i className="fi text-1.5xl text-gray-900 mt-2 fi-rr-angle-small-down"></i>
+              <p><span className="font-semibold text-[15px] mr-1 border-b-2 border-black">{headerLocation}</span> <span className={address ? "text-[15px]" : ""}>{address && (address.length > 30 ? address.substring(0, 30) + "..." : address)}</span></p>
+              <i className="fi text-1.5xl text-gray-900 mt-2 fi-rr-angle-small-down"></i>
             </div>
           </div>
 
