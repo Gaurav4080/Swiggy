@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { Link, Outlet } from 'react-router-dom'
-import { CartContext, Coordinates, Visibility } from '../context/contextApi'
+import { Coordinates } from '../context/contextApi'
 import Cart from './Cart'
 import { useDispatch, useSelector } from 'react-redux'
 import { toggleSearchBar } from '../utils/toggleSlice'
@@ -42,7 +42,7 @@ function Head() {
 
   const [searchResult, setSearchResult] = useState([])
   const [address, setAddress] = useState("")
-  const { cartData, setCartData } = useContext(CartContext)
+  const cartData = useSelector((state) => state.cartSlice.cartItems)
   const visible = useSelector((state) => state.toggleSlice.searchBarToggle)
   const dispatch = useDispatch()
   

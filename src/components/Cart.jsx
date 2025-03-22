@@ -1,21 +1,13 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { CartContext } from '../context/contextApi';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { clearCartData, deleteItem } from '../utils/cartSlice';
 
 function Cart() {
-    const { cartData, setCartData } = useContext(CartContext);
+    const cartData = useSelector((state) => state.cartSlice.cartItems)
+    const dispatch = useDispatch()
     const [showMoreStates, setShowMoreStates] = useState({});
     let totalPrize = cartData.reduce((acc, currVal) => acc + (currVal.price ? currVal.price / 100 : currVal.defaultPrice / 100),0);
-    
-    function getDataFromLocalStorage() {
-        let data = JSON.parse(localStorage.getItem("cartData")) || []
-        setCartData(data);
-    }
-
-    useEffect(() => {
-        getDataFromLocalStorage()
-    }, [])
-
 
     if (cartData.length <= 0) {
         return (
@@ -29,19 +21,11 @@ function Cart() {
     }
 
     function handleRemoveFromCart(index) {
-        setCartData((prev) => {
-            if(cartData.length > 1){
-                const updatedCart = prev.filter((_, i) => i !== index);
-            localStorage.setItem("cartData", JSON.stringify(updatedCart)); // Update localStorage
-            return updatedCart;
-            }
-            clearCart();
-        });
+        dispatch(deleteItem(index))
     }
 
     function clearCart() {
-        setCartData([]);
-        localStorage.clear();
+        dispatch(clearCartData())
     }
 
     function toggleShowMore(index) {
