@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 function Cart() {
     const { cartData, setCartData } = useContext(CartContext);
     const [showMoreStates, setShowMoreStates] = useState({});
+    let totalPrize = cartData.reduce((acc, currVal) => (acc + currVal.price / 100 || currVal.defaultPrice / 100), 0)
 
     function getDataFromLocalStorage() {
         let data = JSON.parse(localStorage.getItem("cartData")) || []
@@ -35,6 +36,11 @@ function Cart() {
         });
     }
 
+    function clearCart() {
+        setCartData([]);
+        localStorage.clear();
+    }
+
     function toggleShowMore(index) {
         setShowMoreStates((prev) => ({ ...prev, [index]: !prev[index] }));
     }
@@ -52,6 +58,8 @@ function Cart() {
                         </div>
                     );
                 })}
+                <h1>Total price: {totalPrize}</h1>
+                <button onClick={clearCart} className='`bg-slate-100 text-lg font-bold border px-10 mt-5 text-green-600 hover:cursor-pointer drop-shadow-2xl rounded-xl py-2'>Clear Cart</button>
             </div>
         </div>
     );
