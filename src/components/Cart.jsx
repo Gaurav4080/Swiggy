@@ -30,9 +30,12 @@ function Cart() {
 
     function handleRemoveFromCart(index) {
         setCartData((prev) => {
-            const updatedCart = prev.filter((_, i) => i !== index);
+            if(cartData.length > 1){
+                const updatedCart = prev.filter((_, i) => i !== index);
             localStorage.setItem("cartData", JSON.stringify(updatedCart)); // Update localStorage
             return updatedCart;
+            }
+            clearCart();
         });
     }
 

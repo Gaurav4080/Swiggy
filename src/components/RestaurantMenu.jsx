@@ -11,7 +11,6 @@ function RestaurantMenu() {
 
     const [resInfo, setResInfo] = useState([])
     const [discountData, setDiscountData] = useState([])
-    const [topPicksData, setTopPicksData] = useState(null)
     const [menuData, setMenuData] = useState([])
     const [value, setValue] = useState(0)
     const { coord: { lat, lng } } = useContext(Coordinates)
@@ -30,7 +29,6 @@ function RestaurantMenu() {
         setResInfo(result?.data?.cards[2]?.card?.card?.info)
         setDiscountData(result?.data?.cards[3]?.card?.card?.gridElements?.infoWithStyle?.offers)
         let actualMenu = (result?.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards).filter((data) => data?.card?.card?.itemCards || data?.card?.card?.categories)
-        setTopPicksData((result?.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards).filter(data => data.card.card.title == "Top Picks")[0])
         setMenuData(actualMenu)
     }
 
@@ -91,31 +89,6 @@ function RestaurantMenu() {
                     </div>
                 </div>
 
-                {topPicksData &&
-                    <div className='w-full overflow-hidden'>
-                        <div className='flex justify-between mt-8'>
-                            <h1 className='font-bold text-xl'>{topPicksData.card.card.title}</h1>
-                            <div className='flex gap-3'>
-                                <div onClick={handlePrev} className={`cursor-pointer rounded-full h-9 w-9 flex justify-center items-center ${value <= 0 ? "bg-gray-100" : "bg-gray-200"}`}>
-                                    <i className={`fi text-2xl mt-1 fi-rr-arrow-small-left ${value <= 0 ? "text-gray-400" : "text-gray-800"}`}></i>
-                                </div>
-                                <div onClick={handleNext} className={`cursor-pointer rounded-full h-9 w-9 flex justify-center items-center ${value >= 90 ? "bg-gray-100" : "bg-gray-200"}`}>
-                                    <i className={`fi text-2xl mt-1 fi-rr-arrow-small-right ${value >= 90 ? "text-gray-400" : "text-gray-800"}`}></i>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="flex gap-4 mt-5 overflow-x-auto flex-nowrap">
-                            {topPicksData?.card?.card?.carousel?.map(({ creativeId }) => (
-                                <div key={creativeId} className="min-w-[300px] flex-shrink-0">
-                                    <img className="w-[384px] h-[395px]" src={`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_292,h_300/${creativeId}`} alt="" />
-                                </div>
-                            ))}
-                        </div>
-
-                    </div>
-                }
-
                 <h2 className='text-center mt-5 leading-5'>Menu</h2>
 
                 <div className='w-full mt-5 relative cursor-pointer'>
@@ -166,7 +139,7 @@ function MenuCard({ card, resInfo }) {
                     </div>
                     {
                         isOpen &&
-                        <DetailMenu itemCards={itemCards} resInfo={resInfo}/>
+                        <DetailMenu itemCards={itemCards} resInfo={resInfo} />
                     }
                 </div>
                 <hr className={`my-5 border-${card["@type"] ? '[10px]' : '[4px]'} text-slate-200`} />
@@ -204,14 +177,22 @@ function DetailMenu({ itemCards, resInfo }) {
                 const { cartData, setCartData } = useContext(CartContext)
 
                 function handleAddToCart() {
-                console.log(resInfo);
-                    const isAdded = cartData.find((data) => data.id === info.id);
-                    !isAdded ? setCartData((prev) => {
-                        const updatedCart = [...prev, info];
-                        localStorage.setItem("cartData", JSON.stringify(updatedCart)); // Store in localStorage
-                        return updatedCart;
-                    })
-                        : (alert("Item already added to Cart!"), localStorage.setItem("cartData", JSON.stringify(cartData)));
+                    const isAdded = cartData.some((data) => data.id === info.id);
+                    let getResInfoFromLocalStorage = JSON.parse(localStorage.getItem("resInfo")) || []
+                    console.log(getResInfoFromLocalStorage);
+
+                    if (!isAdded) {
+                        if (getResInfoFromLocalStorage.name === resInfo.name || getResInfoFromLocalStorage.length === 0) {
+                            setCartData((prev) => [...prev, info])
+                            localStorage.setItem("cartData", JSON.stringify([...cartData, info]));
+                            localStorage.setItem("resInfo", JSON.stringify(resInfo))
+                        }
+                        else {
+                            alert("You are trying to add item from a different restaurant!!");
+                        }
+                    } else {
+                        alert("Item already added to Cart!");
+                    }
                 }
 
                 const key = `item-${index}`;
