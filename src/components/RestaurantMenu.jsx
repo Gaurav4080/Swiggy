@@ -205,7 +205,12 @@ function DetailMenu({ itemCards }) {
 
                 function handleAddToCart() {
                     const isAdded = cartData.find((data) => data.id === info.id);
-                    !isAdded ? setCartData((prev) => [...prev, info]) : alert("Item already addded to Cart!");
+                    !isAdded ? setCartData((prev) => {
+                        const updatedCart = [...prev, info];
+                        localStorage.setItem("cartData", JSON.stringify(updatedCart)); // Store in localStorage
+                        return updatedCart;
+                    })
+                        : (alert("Item already added to Cart!"), localStorage.setItem("cartData", JSON.stringify(cartData)));
                 }
 
                 const key = `item-${index}`;

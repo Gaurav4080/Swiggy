@@ -1,10 +1,20 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { CartContext } from '../context/contextApi';
 import { Link } from 'react-router-dom';
 
 function Cart() {
     const { cartData, setCartData } = useContext(CartContext);
     const [showMoreStates, setShowMoreStates] = useState({});
+
+    function getDataFromLocalStorage() {
+        let data = JSON.parse(localStorage.getItem("cartData")) || []
+        setCartData(data);
+    }
+
+    useEffect(() => {
+        getDataFromLocalStorage()
+    }, [])
+
 
     if (cartData.length <= 0) {
         return (
@@ -18,7 +28,11 @@ function Cart() {
     }
 
     function handleRemoveFromCart(index) {
-        setCartData(cartData.filter((_, i) => i !== index));
+        setCartData((prev) => {
+            const updatedCart = prev.filter((_, i) => i !== index);
+            localStorage.setItem("cartData", JSON.stringify(updatedCart)); // Update localStorage
+            return updatedCart;
+        });
     }
 
     function toggleShowMore(index) {
