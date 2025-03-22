@@ -5,8 +5,8 @@ import { Link } from 'react-router-dom';
 function Cart() {
     const { cartData, setCartData } = useContext(CartContext);
     const [showMoreStates, setShowMoreStates] = useState({});
-    let totalPrize = cartData.reduce((acc, currVal) => (acc + currVal.price / 100 || currVal.defaultPrice / 100), 0)
-
+    let totalPrize = cartData.reduce((acc, currVal) => acc + (currVal.price ? currVal.price / 100 : currVal.defaultPrice / 100),0);
+    
     function getDataFromLocalStorage() {
         let data = JSON.parse(localStorage.getItem("cartData")) || []
         setCartData(data);

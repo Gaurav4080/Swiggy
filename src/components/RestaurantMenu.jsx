@@ -126,7 +126,7 @@ function RestaurantMenu() {
                 <div>
                     {menuData.map(({
                         card: { card } }) => {
-                        return <MenuCard key={card.categoryId} card={card} />
+                        return <MenuCard key={card.categoryId} card={card} resInfo={resInfo} />
                     })}
                 </div>
             </div>
@@ -146,7 +146,7 @@ function Discount({ data: { info: { header, offerLogo, couponCode } } }) {
     )
 }
 
-function MenuCard({ card }) {
+function MenuCard({ card, resInfo }) {
 
     let state = !!card["@type"];
     const [isOpen, setIsOpen] = useState(state)
@@ -166,7 +166,7 @@ function MenuCard({ card }) {
                     </div>
                     {
                         isOpen &&
-                        <DetailMenu itemCards={itemCards} />
+                        <DetailMenu itemCards={itemCards} resInfo={resInfo}/>
                     }
                 </div>
                 <hr className={`my-5 border-${card["@type"] ? '[10px]' : '[4px]'} text-slate-200`} />
@@ -179,7 +179,7 @@ function MenuCard({ card }) {
                 <h1 className='font-bold text-[25px]'>{title}</h1>
                 {
                     categories.map((data) => {
-                        return <MenuCard key={data.categoryId} card={data} />
+                        return <MenuCard key={data.categoryId} card={data} resInfo={resInfo} />
                     })
                 }
             </div>
@@ -187,7 +187,7 @@ function MenuCard({ card }) {
     }
 }
 
-function DetailMenu({ itemCards }) {
+function DetailMenu({ itemCards, resInfo }) {
     return (
         <div className='m-5'>
             {itemCards.map(({ card: { info } }, index) => {
@@ -204,6 +204,7 @@ function DetailMenu({ itemCards }) {
                 const { cartData, setCartData } = useContext(CartContext)
 
                 function handleAddToCart() {
+                console.log(resInfo);
                     const isAdded = cartData.find((data) => data.id === info.id);
                     !isAdded ? setCartData((prev) => {
                         const updatedCart = [...prev, info];
