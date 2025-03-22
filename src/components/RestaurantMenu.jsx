@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { Coordinates } from '../context/contextApi'
+import { CartContext, Coordinates } from '../context/contextApi'
 
 let veg = "https://www.pngkey.com/png/detail/261-2619381_chitr-veg-symbol-svg-veg-and-non-veg.png"
 let nonVeg = "https://www.pngkey.com/png/full/245-2459071_non-veg-icon-non-veg-symbol-png.png"
@@ -14,7 +14,7 @@ function RestaurantMenu() {
     const [topPicksData, setTopPicksData] = useState(null)
     const [menuData, setMenuData] = useState([])
     const [value, setValue] = useState(0)
-    const {coord: {lat, lng}} = useContext(Coordinates)
+    const { coord: { lat, lng } } = useContext(Coordinates)
 
     function handleNext() {
         value >= 90 ? "" : setValue((prev) => prev + 38)
@@ -123,35 +123,6 @@ function RestaurantMenu() {
                     <i className="fi fi-br-search absolute text-slate-500 top-3 right-5"></i>
                 </div>
 
-                {/* {
-                    topPicksData &&
-                    <div className='w-full overflow-hidden'>
-                        <div className='flex justify-between mt-8'>
-                            <h1 className='font-bold text-xl'>{topPicksData?.card?.card?.title}</h1>
-                            <div className='flex gap-3'>
-                                <div onClick={handlePrev} className={`cursor-pointer rounded-full h-9 w-9 flex justify-center items-center ${value <= 0 ? "bg-gray-100" : "bg-gray-200"}`}>
-                                    <i className={`fi text-2xl mt-1 fi-rr-arrow-small-left ${value <= 0 ? "text-gray-400" : "text-gray-800"}`}></i>
-                                </div>
-                                <div onClick={handleNext} className={`cursor-pointer rounded-full h-9 w-9 flex justify-center items-center ${value >= 90 ? "bg-gray-100" : "bg-gray-200"}`}>
-                                    <i className={`fi text-2xl mt-1 fi-rr-arrow-small-right ${value >= 90 ? "text-gray-400" : "text-gray-800"}`}></i>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div style={{ translate: `-${value}%` }}
-                            className='flex gap-4 mt-5 duration-300'>
-                            {
-                                topPicksData.card.card.carousel.map(({ creativeId, dish: { info: { defaultPrice, price} } }) => {
-                                    return 
-                                    <div>
-                                        <img src="" alt="" />
-                                    </div>
-                                })
-                            }
-                        </div>
-                    </div>
-                } */}
-
                 <div>
                     {menuData.map(({
                         card: { card } }) => {
@@ -220,11 +191,25 @@ function DetailMenu({ itemCards }) {
     return (
         <div className='m-5'>
             {itemCards.map(({ card: { info } }, index) => {
-                const { name, defaultPrice, price, itemAttribute, description, imageId } = info;
-                const vegClassifier = itemAttribute?.vegClassifier;
+                const {
+                    name,
+                    defaultPrice,
+                    price,
+                    itemAttribute: { vegClassifier },
+                    description,
+                    imageId
+                } = info;
+                let trimDes = description ? description.substring(0, 130) + "..." : "";
+
+                const { cartData, setCartData } = useContext(CartContext)
+
+                function handleAddToCart() {
+                    const isAdded = cartData.find((data) => data.id === info.id);
+                    !isAdded ? setCartData((prev) => [...prev, info]) : alert("Item already addded to Cart!");
+                }
+
                 const key = `item-${index}`;
                 const [showMore, setShowMore] = useState(false);
-                let trimDes = description ? description.substring(0, 130) + "..." : "";
 
                 return (
                     <div key={key}>
@@ -249,8 +234,9 @@ function DetailMenu({ itemCards }) {
                             </div>
                             <div className='w-[20%] relative h-full'>
                                 {imageId &&
-                                    <img className='rounded-xl' src={`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_300,h_300,c_fit/${imageId}`} alt="" />}
-                                <button className={`bg-slate-100 text-lg font-bold border px-10 text-green-600 drop-shadow-2xl rounded-xl absolute left-4 py-2 ${imageId ? 'bottom-[-20px]' : 'top-[30px]'}`}> ADD </button>
+                                    <img className='rounded-xl' src={`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_300,h_300,c_fit/${imageId}`} alt="" />
+                                }
+                                <button onClick={handleAddToCart} className={`bg-slate-100 text-lg font-bold border px-10 text-green-600 hover:cursor-pointer drop-shadow-2xl rounded-xl absolute left-4 py-2 ${imageId ? 'bottom-[-20px]' : 'top-[30px]'}`}> ADD </button>
                             </div>
                         </div>
                         <hr className='my-5 text-slate-300 border-1' />
