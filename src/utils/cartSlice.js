@@ -20,7 +20,10 @@ const cartSlice = createSlice({
                 state.cartItems = state.cartItems.filter((_, i) => i !== index);
                 localStorage.setItem("cartData", JSON.stringify(state.cartItems));
             } else {
-                clearCart(state);
+                state.cartItems = [];
+                state.resInfo = [];
+                localStorage.removeItem("cartData");
+                localStorage.removeItem("resInfo");
             }
         },
         clearCartData: (state) => {

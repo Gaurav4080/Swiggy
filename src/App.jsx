@@ -2,18 +2,14 @@ import { Route, Routes } from "react-router-dom"
 import Body from "./components/Body"
 import Head from "./components/Head"
 import RestaurantMenu from "./components/RestaurantMenu"
-import { Coordinates } from "./context/contextApi"
-import { useState } from "react"
 import Cart from "./components/Cart"
 import { useSelector } from "react-redux"
 
 function App() {
 
-  const [coord, setCoord] = useState({ lat: 28.5355161, lng: 77.3910265 })
   const visible = useSelector((state) => state.toggleSlice.searchBarToggle)
 
   return (
-      <Coordinates.Provider value={{ coord, setCoord }}>
         <div className={visible ? "max-h-screen overflow-hidden" : ""}>
           <Routes>
             <Route path="/" element={<Head />}>
@@ -24,7 +20,6 @@ function App() {
             </Route>
           </Routes>
         </div>
-      </Coordinates.Provider>
   )
 }
 

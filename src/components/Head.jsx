@@ -1,9 +1,9 @@
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import { Link, Outlet } from 'react-router-dom'
-import { Coordinates } from '../context/contextApi'
 import Cart from './Cart'
 import { useDispatch, useSelector } from 'react-redux'
 import { toggleSearchBar } from '../utils/toggleSlice'
+import { updateCoord } from "../utils/coordSlice"; // Import the Redux action
 
 function Head() {
 
@@ -45,8 +45,6 @@ function Head() {
   const cartData = useSelector((state) => state.cartSlice.cartItems)
   const visible = useSelector((state) => state.toggleSlice.searchBarToggle)
   const dispatch = useDispatch()
-  
-  const { setCoord } = useContext(Coordinates)
   const [headerLocation, setHeaderLocation] = useState("Others")
 
   function handleVisbility() {
@@ -65,10 +63,10 @@ function Head() {
     handleVisbility()
     const res = await fetch(`https://www.swiggy.com/dapi/misc/address-recommend?place_id=${id}`);
     const data = await res.json();
-    setCoord({
+    dispatch(updateCoord({
       lat: data.data[0].geometry.location.lat,
       lng: data.data[0].geometry.location.lng
-    })
+  }));
     setAddress(data.data[0].formatted_address)
     setHeaderLocation(data?.data[0]?.address_components[0]?.long_name)
   }
@@ -81,7 +79,7 @@ function Head() {
         <div className={'bg-white w-[40%] flex justify-end h-full p-5 absolute z-40 duration-500 ' + (visible ? "left-0" : "-left-[100%]")}>
           <div className='flex flex-col gap-4 w-[70%] mr-6'>
             <i className="fi fi-rr-cross-small text-3xl text-gray-600" onClick={handleVisbility}></i>
-            <input type="text" className="border p-5 focus:outline-none focus:shadow-lg" onChange={(e) => searchResultData(e.target.value)} />
+            <input type="text" placeholder='Search for location' className="border p-3 bg-slate-100 focus:outline-none focus:shadow-lg" onChange={(e) => searchResultData(e.target.value)} />
             <div className='p-5 pt-2'>
               <ul>
                 {searchResult.map((data, index) => {

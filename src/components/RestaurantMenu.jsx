@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { Coordinates } from '../context/contextApi'
 import { useDispatch, useSelector } from 'react-redux'
 import { addToCart } from '../utils/cartSlice'
 
@@ -15,7 +14,6 @@ function RestaurantMenu() {
     const [discountData, setDiscountData] = useState([])
     const [menuData, setMenuData] = useState([])
     const [value, setValue] = useState(0)
-    const { coord: { lat, lng } } = useContext(Coordinates)
 
     function handleNext() {
         value >= 90 ? "" : setValue((prev) => prev + 38)
