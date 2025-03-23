@@ -29,7 +29,7 @@ function Cusines({ data }) {
                 style={{ translate: `-${value}%` }}
                 className={`flex my-3 duration-300`}>
                 {data.map((item) => (
-                    <img key={item.imageId} className='w-40' src={`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_288,h_360/${item.imageId}`} alt="" />
+                    <img key={item.imageId} className='w-40 hover:scale-80 hover:cursor-pointer duration-300' src={`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_288,h_360/${item.imageId}`} alt="" />
                 ))}
             </div>
             <hr className='border text-gray-300' />

@@ -10,6 +10,7 @@ const cartSlice = createSlice({
         addToCart: (state, action) => {
             const { info, resInfo } = action.payload
             state.cartItems = [...state.cartItems, info]
+            state.resInfo = resInfo;
             localStorage.setItem("cartData", JSON.stringify(state.cartItems));
             localStorage.setItem("resInfo", JSON.stringify(resInfo))
         },
