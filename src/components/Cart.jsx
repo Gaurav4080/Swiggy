@@ -3,13 +3,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { clearCartData, deleteItem } from '../utils/cartSlice';
 import toast from 'react-hot-toast';
+import { toggleLogIn } from '../utils/toggleSlice';
 
 function Cart() {
     const cartData = useSelector((state) => state.cartSlice.cartItems)
+    const resInfo = useSelector((state) => state.cartSlice.resInfo)
     const dispatch = useDispatch()
     const [showMoreStates, setShowMoreStates] = useState({});
     const userData = useSelector((state) => state.authSlice.UserData)
-    const navigate = useNavigate()
     let totalPrize = cartData.reduce((acc, currVal) => acc + (currVal.price ? currVal.price / 100 : currVal.defaultPrice / 100), 0);
 
     if (cartData.length <= 0) {
@@ -40,7 +41,7 @@ function Cart() {
     function handlePlaceOrder() {
         if (!userData) {
             toast.error("You need to login to place an order")
-            navigate("/SignIn")
+            dispatch(toggleLogIn())
             return
         }
         toast.success("Order Placed Successfully")
@@ -49,14 +50,24 @@ function Cart() {
     return (
         <div className='w-full'>
             <div className='w-[50%] mx-auto'>
+                <div className='flex justify-between p-5 bg-slate-200'>
+                    <img className='rounded-xl' src={`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_300,h_300,c_fit/${resInfo.cloudinaryImageId}`} alt="" />
+                    <div className='mt-45'>
+                        <p className='text-5xl border-b-2 border-black pb-3'>{resInfo.name}</p>
+                        <p className='mt-3 text-xl'>{resInfo.areaName}</p>
+                    </div>
+                </div>
                 {cartData.map((data, index) => {
                     let trimDes = data.description ? data.description.substring(0, 130) + "..." : "";
                     const showMore = showMoreStates[index] || false;
                     return (
-                        <div key={`item-${index}`} className='flex justify-between my-5 p-2'>
-                            <div className='w-[70%] mt-2'><h2 className='font-bold text-lg'>{data.name}</h2><p className='font-bold text-lg italic'>₹ {data.defaultPrice / 100 || data.price / 100}</p>{trimDes && (<div><span>{showMore ? data.description : trimDes}</span>{trimDes.length >= 50 && (<button onClick={() => toggleShowMore(index)} className="cursor-pointer mx-1 font-bold text-gray-600">{showMore ? "less" : "more"}</button>)}</div>)}</div>
-                            <div className='w-[23%] relative'>{data.imageId && (<img className='rounded-xl' src={`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_300,h_300,c_fit/${data.imageId}`} alt="" />)}<button onClick={() => handleRemoveFromCart(index)} className={`bg-slate-100 text-lg font-bold border px-10 text-green-600 hover:cursor-pointer drop-shadow-2xl rounded-xl absolute left-4 py-2 ${data.imageId ? 'bottom-[-20px]' : 'top-[30px]'}`}> Remove </button></div>
-                        </div>
+                        <>
+                            <div key={`item-${index}`} className='flex justify-between my-8 p-2'>
+                                <div className='w-[70%] mt-2'><h2 className='font-bold text-lg'>{data.name}</h2><p className='font-bold text-lg italic'>₹ {data.defaultPrice / 100 || data.price / 100}</p>{trimDes && (<div><span>{showMore ? data.description : trimDes}</span>{trimDes.length >= 50 && (<button onClick={() => toggleShowMore(index)} className="cursor-pointer mx-1 font-bold text-gray-600">{showMore ? "less" : "more"}</button>)}</div>)}</div>
+                                <div className='w-[23%] relative'>{data.imageId && (<img className='rounded-xl' src={`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_300,h_300,c_fit/${data.imageId}`} alt="" />)}<button onClick={() => handleRemoveFromCart(index)} className={`bg-slate-100 text-lg font-bold border px-10 text-green-600 hover:cursor-pointer drop-shadow-2xl rounded-xl absolute left-4 py-2 ${data.imageId ? 'bottom-[-20px]' : 'top-[30px]'}`}> Remove </button></div>
+                            </div>
+                            <hr />
+                        </>
                     );
                 })}
                 <h1>Total price: {totalPrize}</h1>
