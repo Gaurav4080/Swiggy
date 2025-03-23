@@ -66,7 +66,7 @@ function Head() {
     dispatch(updateCoord({
       lat: data.data[0].geometry.location.lat,
       lng: data.data[0].geometry.location.lng
-  }));
+    }));
     setAddress(data.data[0].formatted_address)
     setHeaderLocation(data?.data[0]?.address_components[0]?.long_name)
   }
@@ -123,7 +123,12 @@ function Head() {
                   <div className='flex items-center gap-2'>
                     <i className={`mt-1 fi font-semibold text-black ${data.image}`}></i>
                     <p className='text-l font-semibold text-black'>{data.name}</p>
-                    {data.name === "Cart" && cartData.length > 0 && cartData.length}
+                    {data.name === "Cart" && (
+                      <p className={`text-white text-xs font-semibold px-2 py-1 rounded-full flex items-center justify-center ${cartData.length > 0 ? "bg-green-600" : "bg-gray-400"
+                        }`}>
+                        {cartData.length > 0 ? cartData.length : ""}
+                      </p>
+                    )}
                   </div>
                 </Link>
               ))
