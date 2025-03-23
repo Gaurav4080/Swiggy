@@ -4,14 +4,15 @@ import Head from "./components/Head"
 import RestaurantMenu from "./components/RestaurantMenu"
 import Cart from "./components/Cart"
 import { useSelector } from "react-redux"
-import SignIn from "./components/SignIn"
+import SignIn from "./components/SignInBtn"
 
 function App() {
 
   const visible = useSelector((state) => state.toggleSlice.searchBarToggle)
+  const logInvisible = useSelector((state) => state.toggleSlice.logInToggle)
 
   return (
-        <div className={visible ? "max-h-screen overflow-hidden" : ""}>
+        <div className={visible || logInvisible ? "max-h-screen overflow-hidden" : ""}>
           <Routes>
             <Route path="/" element={<Head />}>
               <Route path="/" element={<Body />}></Route>
