@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Cusines from "./Cusines";
 import TopRestaurants from "./TopRestaurants";
 import OnlineRestaurants from "./OnlineRestaurants";
@@ -11,6 +11,7 @@ function Body() {
     const [topRestaurantTitle, setTopRestaurantTitle] = useState("");
     const [onlineRestaurantTitle, setOnlineRestaurantTitle] = useState("");
     const { lat, lng } = useSelector((state) => state.coordSlice);
+    const filterVal = useSelector((state) => state.filterSlice.filterVal);
 
     async function fetchData() {
         try {
@@ -31,6 +32,28 @@ function Body() {
     useEffect(() => {
         fetchData();
     }, [lat, lng]);
+
+    const filteredData = useMemo(() => {
+        return restaurantData.filter((item) => {
+            const rating = item?.info?.avgRating;
+            const discount = item?.info?.aggregatedDiscountInfoV3;
+            const costString = item?.info?.costForTwo || "";
+            const costNumber = parseInt(costString.replace(/\D/g, ""), 10);
+
+            switch (filterVal) {
+                case "Ratings 4.0+":
+                    return rating > 4;
+                case "Offers":
+                    return !!discount;
+                case "Rs.300 - Rs.600":
+                    return costNumber >= 300 && costNumber <= 600;
+                case "Less than Rs.300":
+                    return costNumber < 300;
+                default:
+                    return true;
+            }
+        });
+    }, [filterVal, restaurantData]);
 
     if (unserviceableData?.communication) {
         return (
@@ -53,7 +76,7 @@ function Body() {
             <div className="w-[75%] mx-auto mt-2 overflow-hidden">
                 <Cusines data={cusineData} />
                 <TopRestaurants data={restaurantData} title={topRestaurantTitle} />
-                <OnlineRestaurants data={restaurantData} title={onlineRestaurantTitle} />
+                <OnlineRestaurants data={filterVal ? filteredData : restaurantData} title={onlineRestaurantTitle} />
             </div>
         </div>
     );

@@ -14,7 +14,7 @@ function RestaurantCard(restaurant) {
                 </p>
             </div>
             <div className='mt-3'>
-                <h2 className='text-xl font-bold text-green-1000'>{restaurant.name}</h2>
+                <h2 className='text-xl font-bold line-clamp-1 text-green-1000'>{restaurant.name}</h2>
                 <p className='flex items-center mt-1 gap-1 font-bold text-green-700'><i className="fi fi-ss-circle-star text-green-600 text-lg"></i> {restaurant.avgRating}<span className='mb-2 text'> . </span><span>{restaurant?.sla?.slaString}</span></p>
                 <p className='line-clamp-1 overflow-hidden text-ellipsis'>{restaurant?.cuisines?.join(", ")}</p>
                 <p className='line-clamp-1 overflow-hidden text-ellipsis font-semibold'>{restaurant.locality}</p>
