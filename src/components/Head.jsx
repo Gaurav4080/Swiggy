@@ -3,7 +3,7 @@ import { Link, Outlet } from 'react-router-dom'
 import Cart from './Cart'
 import { useDispatch, useSelector } from 'react-redux'
 import { toggleSearchBar } from '../utils/toggleSlice'
-import { updateCoord } from "../utils/coordSlice"; // Import the Redux action
+import { updateCoord } from "../utils/coordSlice";
 
 function Head() {
 

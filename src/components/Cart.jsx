@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { clearCartData, deleteItem } from '../utils/cartSlice';
+import toast from 'react-hot-toast';
 
 function Cart() {
     const cartData = useSelector((state) => state.cartSlice.cartItems)
@@ -22,10 +23,12 @@ function Cart() {
 
     function handleRemoveFromCart(index) {
         dispatch(deleteItem(index))
+        toast.success("Item removed from cart!")
     }
 
     function clearCart() {
         dispatch(clearCartData())
+        toast.success("Cart cleared succesfully!")
     }
 
     function toggleShowMore(index) {
