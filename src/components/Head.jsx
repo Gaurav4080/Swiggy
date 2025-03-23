@@ -31,7 +31,7 @@ function Head() {
     {
       name: "Sign In",
       image: "fi-bs-user",
-      path: "/sign_in"
+      path: "/SignIn"
     },
     {
       name: "Cart",
@@ -43,6 +43,9 @@ function Head() {
   const [searchResult, setSearchResult] = useState([])
   const [address, setAddress] = useState("")
   const cartData = useSelector((state) => state.cartSlice.cartItems)
+  const userData = useSelector((state) => state.authSlice.UserData)
+  console.log(userData);
+
   const visible = useSelector((state) => state.toggleSlice.searchBarToggle)
   const dispatch = useDispatch()
   const [headerLocation, setHeaderLocation] = useState("Others")
@@ -119,18 +122,36 @@ function Head() {
           <div className='flex items-center gap-12'>
             {
               navItems.map((data) => (
-                <Link key={data.name} to={data.path}>
-                  <div className='flex items-center gap-2'>
-                    <i className={`mt-1 fi font-semibold text-black ${data.image}`}></i>
-                    <p className='text-l font-semibold text-black'>{data.name}</p>
-                    {data.name === "Cart" && (
-                      <p className={`text-white text-xs font-semibold px-2 py-1 rounded-full flex items-center justify-center ${cartData.length > 0 ? "bg-green-600" : "bg-gray-400"
-                        }`}>
-                        {cartData.length > 0 ? cartData.length : ""}
-                      </p>
-                    )}
-                  </div>
-                </Link>
+
+                data.name === "Sign In" ?
+                  <Link key={data.name} to={data.path}>
+                    <div className='flex items-center gap-2'>
+                      {
+                        userData ? <img src={userData.photo} /> :
+                          <i className={`mt-1 fi font-semibold text-black ${data.image}`}></i>
+                      }
+                      <p className='text-l font-semibold text-black'>{userData ? userData.name : data.name}</p>
+                      {data.name === "Cart" && (
+                        <p className={`text-white text-xs font-semibold px-2 py-1 rounded-full flex items-center justify-center ${cartData.length > 0 ? "bg-green-600" : "bg-gray-400"
+                          }`}>
+                          {cartData.length > 0 ? cartData.length : ""}
+                        </p>
+                      )}
+                    </div>
+                  </Link>
+                  :
+                  <Link key={data.name} to={data.path}>
+                    <div className='flex items-center gap-2'>
+                      <i className={`mt-1 fi font-semibold text-black ${data.image}`}></i>
+                      <p className='text-l font-semibold text-black'>{data.name}</p>
+                      {data.name === "Cart" && (
+                        <p className={`text-white text-xs font-semibold px-2 py-1 rounded-full flex items-center justify-center ${cartData.length > 0 ? "bg-green-600" : "bg-gray-400"
+                          }`}>
+                          {cartData.length > 0 ? cartData.length : ""}
+                        </p>
+                      )}
+                    </div>
+                  </Link>
               ))
             }
           </div>

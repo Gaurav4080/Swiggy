@@ -4,6 +4,7 @@ import Head from "./components/Head"
 import RestaurantMenu from "./components/RestaurantMenu"
 import Cart from "./components/Cart"
 import { useSelector } from "react-redux"
+import SignIn from "./components/SignIn"
 
 function App() {
 
@@ -16,6 +17,7 @@ function App() {
               <Route path="/" element={<Body />}></Route>
               <Route path="/restaurantMenu/:id" element={<RestaurantMenu />}></Route>
               <Route path="/Cart/" element={<Cart />}></Route>
+              <Route path="/SignIn/" element={<SignIn />}></Route>
               <Route path="*" element={<h1>Coming Soon</h1>}></Route>
             </Route>
           </Routes>

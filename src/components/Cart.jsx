@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { clearCartData, deleteItem } from '../utils/cartSlice';
 import toast from 'react-hot-toast';
 
@@ -8,7 +8,9 @@ function Cart() {
     const cartData = useSelector((state) => state.cartSlice.cartItems)
     const dispatch = useDispatch()
     const [showMoreStates, setShowMoreStates] = useState({});
-    let totalPrize = cartData.reduce((acc, currVal) => acc + (currVal.price ? currVal.price / 100 : currVal.defaultPrice / 100),0);
+    const userData = useSelector((state) => state.authSlice.UserData)
+    const navigate = useNavigate()
+    let totalPrize = cartData.reduce((acc, currVal) => acc + (currVal.price ? currVal.price / 100 : currVal.defaultPrice / 100), 0);
 
     if (cartData.length <= 0) {
         return (
@@ -35,6 +37,15 @@ function Cart() {
         setShowMoreStates((prev) => ({ ...prev, [index]: !prev[index] }));
     }
 
+    function handlePlaceOrder() {
+        if (!userData) {
+            toast.error("You need to login to place an order")
+            navigate("/SignIn")
+            return
+        }
+        toast.success("Order Placed Successfully")
+    }
+
     return (
         <div className='w-full'>
             <div className='w-[50%] mx-auto'>
@@ -49,7 +60,10 @@ function Cart() {
                     );
                 })}
                 <h1>Total price: {totalPrize}</h1>
-                <button onClick={clearCart} className='`bg-slate-100 text-lg font-bold border px-10 mt-5 text-green-600 hover:cursor-pointer drop-shadow-2xl rounded-xl py-2'>Clear Cart</button>
+                <div className='flex justify-between'>
+                    <button onClick={clearCart} className='`bg-slate-100 text-lg font-bold border px-10 mt-5 text-green-600 hover:cursor-pointer drop-shadow-2xl rounded-xl py-2'>Clear Cart</button>
+                    <button onClick={handlePlaceOrder} className='`bg-slate-100 text-lg font-bold border px-10 mt-5 text-green-600 hover:cursor-pointer drop-shadow-2xl rounded-xl py-2'>Place Order</button>
+                </div>
             </div>
         </div>
     );
