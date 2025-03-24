@@ -6,6 +6,8 @@ import toast from 'react-hot-toast';
 import { toggleLogIn } from '../utils/toggleSlice';
 
 function Cart() {
+    let veg = "https://www.pngkey.com/png/detail/261-2619381_chitr-veg-symbol-svg-veg-and-non-veg.png"
+    let nonVeg = "https://www.pngkey.com/png/full/245-2459071_non-veg-icon-non-veg-symbol-png.png"
     const cartData = useSelector((state) => state.cartSlice.cartItems)
     const resInfo = useSelector((state) => state.cartSlice.resInfo)
     const dispatch = useDispatch()
@@ -50,30 +52,38 @@ function Cart() {
     return (
         <div className='w-full'>
             <div className='w-[50%] mx-auto'>
-                <div className='flex justify-between p-5 bg-slate-200'>
-                    <img className='rounded-xl' src={`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_300,h_300,c_fit/${resInfo.cloudinaryImageId}`} alt="" />
-                    <div className='mt-45'>
+                <div className='flex justify-between p-10'>
+                    <div className='mt-15 mr-20'>
                         <p className='text-5xl border-b-2 border-black pb-3'>{resInfo.name}</p>
-                        <p className='mt-3 text-xl'>{resInfo.areaName}</p>
+                        <p className='mt-3 text-xl'>{resInfo.areaName} {resInfo.avgRating}</p>
+                        <p className='flex items-center mt-1 gap-1 font-bold text-green-700'><i className="fi fi-ss-circle-star mt-1 text-green-600 text-lg"></i> {resInfo.avgRating}<span className='mb-2 text'> . </span><span>{resInfo?.sla?.slaString}</span></p>
+                        <p className='line-clamp-1 overflow-hidden text-ellipsis'>{resInfo?.cuisines?.join(", ")}</p>
+                        <p className='line-clamp-1 overflow-hidden text-ellipsis font-semibold'>{resInfo.locality}</p>
                     </div>
+                    <img className='rounded-xl' src={`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_300,h_300,c_fit/${resInfo.cloudinaryImageId}`} alt="" />
+
                 </div>
                 {cartData.map((data, index) => {
                     let trimDes = data.description ? data.description.substring(0, 130) + "..." : "";
+                    const isLast = index === cartData.length - 1;
                     const showMore = showMoreStates[index] || false;
                     return (
                         <>
                             <div key={`item-${index}`} className='flex justify-between my-8 p-2'>
-                                <div className='w-[70%] mt-2'><h2 className='font-bold text-lg'>{data.name}</h2><p className='font-bold text-lg italic'>₹ {data.defaultPrice / 100 || data.price / 100}</p>{trimDes && (<div><span>{showMore ? data.description : trimDes}</span>{trimDes.length >= 50 && (<button onClick={() => toggleShowMore(index)} className="cursor-pointer mx-1 font-bold text-gray-600">{showMore ? "less" : "more"}</button>)}</div>)}</div>
+                                <div className='w-[70%] mt-2'>
+                                    <img className='w-5' src={data.itemAttribute.vegClassifier === "veg" ? veg : nonVeg} alt="" />
+                                    <h2 className='font-bold text-lg'>{data.name}</h2>
+                                    <p className='font-bold text-lg italic'>₹ {data.defaultPrice / 100 || data.price / 100}</p>{trimDes && (<div><span>{showMore ? data.description : trimDes}</span>{trimDes.length >= 50 && (<button onClick={() => toggleShowMore(index)} className="cursor-pointer mx-1 font-bold text-gray-600">{showMore ? "less" : "more"}</button>)}</div>)}</div>
                                 <div className='w-[23%] relative'>{data.imageId && (<img className='rounded-xl' src={`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_300,h_300,c_fit/${data.imageId}`} alt="" />)}<button onClick={() => handleRemoveFromCart(index)} className={`bg-slate-100 text-lg font-bold border px-10 text-green-600 hover:cursor-pointer drop-shadow-2xl rounded-xl absolute left-4 py-2 ${data.imageId ? 'bottom-[-20px]' : 'top-[30px]'}`}> Remove </button></div>
                             </div>
-                            <hr />
+                            {!isLast && <hr />}
                         </>
                     );
                 })}
-                <h1>Total price: {totalPrize}</h1>
+                <h1 className='font-bold'>Total price: {totalPrize}</h1>
                 <div className='flex justify-between'>
-                    <button onClick={clearCart} className='`bg-slate-100 text-lg font-bold border px-10 mt-5 text-green-600 hover:cursor-pointer drop-shadow-2xl rounded-xl py-2'>Clear Cart</button>
                     <button onClick={handlePlaceOrder} className='`bg-slate-100 text-lg font-bold border px-10 mt-5 text-green-600 hover:cursor-pointer drop-shadow-2xl rounded-xl py-2'>Place Order</button>
+                    <button onClick={clearCart} className='`bg-slate-100 text-lg font-bold border px-10 mt-5 text-green-600 hover:cursor-pointer drop-shadow-2xl rounded-xl py-2'>Clear Cart</button>
                 </div>
             </div>
         </div>

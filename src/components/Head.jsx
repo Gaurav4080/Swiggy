@@ -45,8 +45,6 @@ function Head() {
   const [address, setAddress] = useState("")
   const cartData = useSelector((state) => state.cartSlice.cartItems)
   const userData = useSelector((state) => state.authSlice.UserData)
-  console.log(userData);
-
   const visible = useSelector((state) => state.toggleSlice.searchBarToggle)
   const logInvisible = useSelector((state) => state.toggleSlice.logInToggle)
   const dispatch = useDispatch()
@@ -147,10 +145,10 @@ function Head() {
                     <div className='hover:text-orange-700' onClick={handleLogin}>
                       <div className='flex items-center hover:cursor-pointer gap-2'>
                         {
-                          userData ? <img src={userData.photo} /> :
+                          userData ? <img className='rounded-full h-10' src={userData.photo} /> :
                             <i className={`mt-1 fi font-semibold ${data.image}`}></i>
                         }
-                        <p className='text-l font-semibold'>{userData ? userData.name : data.name}</p>
+                        <p className='text-l font-semibold'>{userData ? userData.name.split(" ")[0] : data.name}</p>
                         {data.name === "Cart" && (
                           <p className={`text-white text-xs font-semibold px-2 py-1 rounded-full flex items-center justify-center ${cartData.length > 0 ? "bg-green-600" : "bg-gray-400"
                             }`}>

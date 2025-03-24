@@ -236,7 +236,7 @@ function DetailMenu({ itemCards, resInfo }) {
                                 <button onClick={handleAddToCart} className={`bg-slate-100 text-lg font-bold border px-10 text-green-600 hover:cursor-pointer drop-shadow-2xl rounded-xl absolute left-4 py-2 ${imageId ? 'bottom-[-20px]' : 'top-[30px]'}`}> ADD </button>
                             </div>
                         </div>
-                        <hr className='my-5 text-slate-300 border-1' />
+                        <hr className='my-10 text-slate-300 border-1' />
                         {
                             isDiffRes && (
                                 <div className='w-[520px] h-[204px] left-[33%] p-6 bg-white z-50 bottom-10 shadow-xl shadow-slate-500 fixed'>
