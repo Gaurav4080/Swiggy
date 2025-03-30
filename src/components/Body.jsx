@@ -73,7 +73,7 @@ function Body() {
 
     return (
         <div className="w-full">
-            <div className="w-[75%] mx-auto mt-2 overflow-hidden">
+            <div className="w-[90%] mx-auto mt-2 overflow-hidden">
                 <Cusines data={cusineData} />
                 <TopRestaurants data={restaurantData} title={topRestaurantTitle} />
                 <OnlineRestaurants data={filterVal ? filteredData : restaurantData} title={onlineRestaurantTitle} />

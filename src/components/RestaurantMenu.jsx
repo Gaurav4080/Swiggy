@@ -39,7 +39,7 @@ function RestaurantMenu() {
 
     return (
         <div className='w-full'>
-            <div className='w-[800px] mx-auto pt-8'>
+            <div className='w-[95%] md:w-[800px] mx-auto pt-8'>
                 <p className='text-[12px] text-slate-400 font-bold'><Link to={"/"}><span className='hover:text-slate-700 hover:cursor-pointer'>Home</span></Link> / <Link to={"/"}><span className='hover:text-slate-700 hover:cursor-pointer'>{resInfo.city}</span></Link> / <span className='text-slate-800'>{resInfo.name}</span></p>
                 <h1 className='font-bold ml-6 pt-6 text-2xl'>{resInfo.name}</h1>
                 <div className='w-full h-[180px] bg-gradient-to-t px-5 pb-5 from-slate-300/70 mt-3 rounded-4xl'>
@@ -211,17 +211,18 @@ function DetailMenu({ itemCards, resInfo }) {
                 return (
                     <div key={key} className='relative'>
                         <div className='flex w-full justify-between min-h-[182px]'>
-                            <div className='w-[70%]'>
+                            <div className='w-[60%] md:w-[70%]'>
                                 <img className='w-5' src={vegClassifier === "veg" ? veg : nonVeg} alt="" />
                                 <h2 className='font-bold text-lg'>{name}</h2>
                                 <p className='font-bold text-lg italic'>₹ {defaultPrice / 100 || price / 100}</p>
                                 {trimDes && (
                                     <div>
-                                        <span>{showMore ? description : trimDes}</span>
+                                        <span className='line-clamp-2 md:line-clamp-none'>{showMore ? description : trimDes}</span>
                                         {trimDes.length >= 50 && (
                                             <button
+                                            
                                                 onClick={() => setShowMore(!showMore)}
-                                                className="cursor-pointer mx-1 font-bold text-gray-600"
+                                                className="hidden md:block cursor-pointer mx-1 font-bold text-gray-600"
                                             >
                                                 {showMore ? "less" : "more"}
                                             </button>
@@ -229,11 +230,11 @@ function DetailMenu({ itemCards, resInfo }) {
                                     </div>
                                 )}
                             </div>
-                            <div className='w-[20%] relative h-full'>
+                            <div className='w-[40%] md:w-[20%] relative h-full'>
                                 {imageId &&
                                     <img className='rounded-xl' src={`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_300,h_300,c_fit/${imageId}`} alt="" />
                                 }
-                                <button onClick={handleAddToCart} className={`bg-slate-100 text-lg font-bold border px-10 text-green-600 hover:cursor-pointer drop-shadow-2xl rounded-xl absolute left-4 py-2 ${imageId ? 'bottom-[-20px]' : 'top-[30px]'}`}> ADD </button>
+                                <button onClick={handleAddToCart} className={`bg-slate-100 text-lg left-1/2 -translate-x-1/2 font-bold border px-10 text-green-600 hover:cursor-pointer shadow-2xl shadow-slate-600 rounded-xl absolute py-2 ${imageId ? 'bottom-[-20px]' : 'top-[30px]'}`}> ADD </button>
                             </div>
                         </div>
                         <hr className='my-10 text-slate-300 border-1' />

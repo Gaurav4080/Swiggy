@@ -27,7 +27,7 @@ function OnlineRestaurants({ data, title }) {
         <div>
             <h1 className="font-bold text-2xl mt-10 my-5">{title}</h1>
 
-            <div className="my-4 flex gap-3">
+            <div className="my-4 flex flex-wrap gap-3">
                 {filterOptions.map((option) => (
                     <button
                         key={option.filterName}
@@ -40,7 +40,7 @@ function OnlineRestaurants({ data, title }) {
                 ))}
             </div>
 
-            <div className="grid grid-cols-4 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
                 {data.map(({ info, cta: { link } }) => (
                     <div className="hover:scale-95 duration-300" key={info.id}>
                         <RestaurantCard {...info} link={link} />

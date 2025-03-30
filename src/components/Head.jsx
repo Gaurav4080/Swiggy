@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { Link, Outlet } from 'react-router-dom'
-import Cart from './Cart'
 import { useDispatch, useSelector } from 'react-redux'
 import { toggleLogIn, toggleSearchBar } from '../utils/toggleSlice'
 import { updateCoord } from "../utils/coordSlice";
@@ -9,11 +8,6 @@ import SignInBtn from './SignInBtn'
 function Head() {
 
   const navItems = [
-    {
-      name: "Swiggy Corporate",
-      image: "fi-rr-shopping-bag",
-      path: "/corporate"
-    },
     {
       name: "Search",
       image: "fi-rr-search",
@@ -82,7 +76,7 @@ function Head() {
     <>
       <div className='w-full'>
         <div onClick={handleVisbility} className={"w-full bg-black/50 h-full z-30 absolute " + (visible ? "visible " : "invisible")}></div>
-        <div className={'bg-white w-[35%] flex justify-end h-full p-5 absolute z-40 duration-500 ' + (visible ? "left-0" : "-left-[100%]")}>
+        <div className={'bg-white w-full md:w-[35%] flex justify-end h-full p-5 absolute z-40 duration-500 ' + (visible ? "left-0" : "-left-[100%]")}>
           <div className='flex flex-col gap-4 w-[70%] mr-6'>
             <i className="fi fi-rr-cross-small text-3xl text-gray-600" onClick={handleVisbility}></i>
             <input type="text" placeholder='Search for location' className="border p-3 bg-slate-100 focus:outline-none focus:shadow-lg" onChange={(e) => searchResultData(e.target.value)} />
@@ -111,46 +105,51 @@ function Head() {
 
       <div className='w-full'>
         <div onClick={handleLogin} className={"w-full bg-black/50 h-full z-30 absolute " + (logInvisible ? "visible " : "invisible")}></div>
-        <div className={'bg-slate-100 w-[35%] flex h-full p-9 absolute z-40 duration-500 ' + (logInvisible ? "right-0" : "-right-[100%]")}>
+        <div className={'bg-slate-100 w-full md:w-[35%] flex h-full p-9 fixed z-40 duration-500 ' + (logInvisible ? "right-0" : "-right-[100%]")}>
           <div className='gap-4 w-[70%]'>
             <i className="fi fi-rr-cross-small text-3xl text-gray-600" onClick={handleLogin}></i>
             <div className='flex items-center justify-between'>
-              <h2 className='text-3xl font-semibold'>Login</h2>
+              <h2 className='text-3xl font-semibold'>{userData ? "Logout" : "Login"}</h2>
               <img className='w-32' src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/Image-login_btpq7r" />
             </div>
             <SignInBtn />
-            <p className='mt-1 font-semibold text-[11px]'>By clicking on Login, I accept the Terms & Conditions & Privacy Policy</p>          
+            <p className='mt-1 font-semibold text-[11px]'>{userData ? "" : "By clicking on Login, I accept the Terms & Conditions & Privacy Policy"}</p>
           </div>
         </div>
       </div>
 
       <div className='relative w-full'>
         <div className='w-full sticky bg-white z-20 top-0 shadow-md h-18 flex justify-center items-center'>
-          <div className=' w-[75%] flex justify-between'>
+          <div className='w-full sm:w-[90%] lg:w-[90%] flex justify-between'>
 
             <div className='flex items-center'>
               <Link to={"/"}>
-                <img className='w-20' src="https://1000logos.net/wp-content/uploads/2021/05/Swiggy-emblem.png" alt="" />
+                <div className='w-20'>
+                  <img src="https://1000logos.net/wp-content/uploads/2021/05/Swiggy-emblem.png" alt="" />
+                </div>
               </Link>
-              <div className='flex items-center gap-1' onClick={handleVisbility}>
-                <p><span className="font-semibold text-[15px] hover:cursor-pointer mr-1 border-b-2 border-black">{headerLocation}</span> <span className={address ? "text-[15px] hover:cursor-pointer hover:text-orange-600" : ""}>{address && (address.length > 30 ? address.substring(0, 30) + "..." : address)}</span></p>
-                <i className="fi text-1.5xl text-gray-900 mt-2 fi-rr-angle-small-down"></i>
+              <div className='flex items-center ' onClick={handleVisbility}>
+                <p className='flex items-center'><span className="font-semibold border-b-2 hover:cursor-pointer border-black">{headerLocation}</span> <span className={address ? "ml-2 max-w-[250px] text-sm hover:cursor-pointer hover:text-orange-600 opacity-85 line-clamp-1" : ""}>{address && (address.length > 30 ? address.substring(0, 30) + "..." : address)}</span></p>
+                <i className="fi text-2xl mt-3 text-orange-500 fi-rs-angle-small-down"></i>
               </div>
             </div>
 
-            <div className='flex items-center gap-12'>
+            <div className='hidden md:flex items-center gap-2 md:gap-10'>
               {
                 navItems.map((data) => (
                   data.name === "Sign In" ?
-                    <div className='hover:text-orange-700' onClick={handleLogin}>
+                    <div key={data.name} className='hover:text-orange-700' onClick={handleLogin}>
                       <div className='flex items-center hover:cursor-pointer gap-2'>
                         {
-                          userData ? <img className='rounded-full h-10' src={userData.photo} /> :
+                          userData && 
+                          <div className='flex gap-2'>
                             <i className={`mt-1 fi font-semibold ${data.image}`}></i>
+                            <p className='mt-1 font-semibold'>{userData.name.split(" ")[0]}</p>
+                          </div>
                         }
-                        <p className='text-l font-semibold'>{userData ? userData.name.split(" ")[0] : data.name}</p>
+                        <p className='text-l font-semibold'>{userData ? "" : data.name}</p>
                         {data.name === "Cart" && (
-                          <p className={`text-white text-xs font-semibold px-2 py-1 rounded-full flex items-center justify-center ${cartData.length > 0 ? "bg-green-600" : "bg-gray-400"
+                          <p className={`text-white text-xs font-semibold py-1 rounded-full flex items-center justify-center ${cartData.length > 0 ? "bg-green-600" : "bg-gray-400"
                             }`}>
                             {cartData.length > 0 ? cartData.length : ""}
                           </p>
@@ -163,7 +162,7 @@ function Head() {
                         <i className={`mt-1 fi font-semibold ${data.image}`}></i>
                         <p className='text-l font-semibold'>{data.name}</p>
                         {data.name === "Cart" && (
-                          <p className={`text-white text-xs font-semibold px-2 py-1 rounded-full flex items-center justify-center ${cartData.length > 0 ? "bg-green-600" : "bg-gray-400"
+                          <p className={`text-white text-xs font-semibold px-2 py-1 rounded-full flex items-center justify-center ${cartData.length > 0 ? "bg-orange-600" : "bg-gray-400"
                             }`}>
                             {cartData.length > 0 ? cartData.length : ""}
                           </p>
@@ -173,9 +172,31 @@ function Head() {
                 ))
               }
             </div>
+
+            <div className='flex md:hidden items-center gap-4 mr-4'>
+              {navItems.map((data) => (
+                <div key={data.name} className="flex">
+                  {
+                    data.name == "Sign In" ? (
+                      <div onClick={handleLogin}>
+                        <i className={`mt-1 fi font-semibold ${data.image}`}></i>
+                      </div>
+                    ) :
+                      <Link to={data.path}>
+                        <i className={`mt-1 fi font-semibold ${data.image}`}></i>
+                      </Link>
+                  }
+                  {data.name === "Cart" && (
+                    <p className={`text-white text-xs font-semibold w-6 h-6 ml-2 py-1 rounded-full flex items-center justify-center ${cartData.length > 0 ? "bg-green-600" : "bg-gray-400"}`}>
+                      {cartData.length > 0 ? cartData.length : ""}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+
           </div>
         </div>
-
         <Outlet />
       </div>
     </>
