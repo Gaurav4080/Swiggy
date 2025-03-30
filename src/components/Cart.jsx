@@ -53,8 +53,8 @@ function Cart() {
         <div className='w-full'>
             <div className='w-[95%] md:w-[800px] mx-auto'>
                 <div className='flex justify-between p-10'>
-                <img className='rounded-xl' src={`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_300,h_300,c_fit/${resInfo.cloudinaryImageId}`} alt="" />
-                    <div className='mt-15 mr-70'>
+                    <img className='rounded-xl' src={`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_300,h_300,c_fit/${resInfo.cloudinaryImageId}`} alt="" />
+                    <div className='mt-15 mr-20'>
                         <p className='text-5xl border-b-2 border-black pb-3'>{resInfo.name}</p>
                         <p className='mt-3 text-xl'>{resInfo.areaName} {resInfo.avgRating}</p>
                         <p className='flex items-center mt-1 gap-1 font-bold text-green-700'><i className="fi fi-ss-circle-star mt-1 text-green-600 text-lg"></i> {resInfo.avgRating}<span className='mb-2 text'> . </span><span>{resInfo?.sla?.slaString}</span></p>
@@ -72,19 +72,21 @@ function Cart() {
                         <>
                             <div key={`item-${index}`} className='flex justify-between my-8 p-2'>
                                 <div className='w-[55%] md:w-[70%] mt-2'>
-                                    <img className='w-5' src={data.itemAttribute.vegClassifier === "veg" ? veg : nonVeg} alt="" />
+                                    {
+                                        data.isVeg ? <img className='w-4 h-4' src={veg} /> : <img className='w-4 h-4' src={nonVeg} />
+                                    }                                    
                                     <h2 className='font-bold text-lg'>{data.name}</h2>
                                     <p className='font-bold text-lg italic'>₹ {data.defaultPrice / 100 || data.price / 100}</p>{trimDes && (<div><span>{showMore ? data.description : trimDes}</span>{trimDes.length >= 50 && (<button onClick={() => toggleShowMore(index)} className="cursor-pointer mx-1 font-bold text-gray-600">{showMore ? "less" : "more"}</button>)}</div>)}</div>
                                 <div className='w-[40%] md:w-[20%] relative'>{data.imageId && (<img className='rounded-xl' src={`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_300,h_300,c_fit/${data.imageId}`} alt="" />)}
                                     <button onClick={() => handleRemoveFromCart(index)} className={`bg-slate-100 text-base font-bold left-1/2 px-5 -translate-x-1/2 tra border text-green-600 hover:cursor-pointer shadow-slate-600 shadow-2xl rounded-xl absolute py-2 ${data.imageId ? 'bottom-[-20px]' : 'top-[30px]'}`}> Remove </button></div>
                             </div>
-                            {!isLast && <hr className="opacity-20"/>}
+                            {!isLast && <hr className="opacity-20" />}
                         </>
                     );
                 })}
                 <div className="flex">
-                <h1 className='text-xl mr-1'>Total price:</h1>
-                <p className="font-semibold mt-1">{totalPrize}</p>
+                    <h1 className='text-xl mr-1'>Total price:</h1>
+                    <p className="font-semibold mt-1">{totalPrize}</p>
                 </div>
                 <div className='flex justify-between'>
                     <button onClick={handlePlaceOrder} className='`bg-slate-100 text-lg font-bold border px-10 mt-5 text-green-600 hover:cursor-pointer drop-shadow-2xl rounded-xl py-2'>Place Order</button>

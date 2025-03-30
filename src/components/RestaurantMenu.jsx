@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { addToCart, clearCartData } from '../utils/cartSlice'
+import { clearCartData } from '../utils/cartSlice'
 import toast from 'react-hot-toast'
+import AddToCartButton from './AddToCartButton'
+import { toggleDiffRes } from '../utils/toggleSlice'
 
 let veg = "https://www.pngkey.com/png/detail/261-2619381_chitr-veg-symbol-svg-veg-and-non-veg.png"
 let nonVeg = "https://www.pngkey.com/png/full/245-2459071_non-veg-icon-non-veg-symbol-png.png"
@@ -169,40 +171,22 @@ function DetailMenu({ itemCards, resInfo }) {
                     name,
                     defaultPrice,
                     price,
-                    itemAttribute: { vegClassifier },
+                    itemAttribute,
                     description,
                     imageId
                 } = info;
                 let trimDes = description ? description.substring(0, 130) + "..." : "";
-
-                const cartData = useSelector((state) => state.cartSlice.cartItems)
-                const [isDiffRes, setIsDiffRes] = useState(false)
-                const getResInfoFromLocalStorage = useSelector((state) => state.cartSlice.resInfo)
+                const isDiffRes = useSelector((state) => state.toggleSlice.isDiffRes)
                 const dispatch = useDispatch()
 
                 function handleIsDiffRes() {
-                    setIsDiffRes((prev) => !prev)
+                    dispatch(toggleDiffRes)
                 }
 
                 function clearCartAndAddNewItem() {
                     dispatch(clearCartData())
                     toast.success("Cart cleared succesfully!")
                     handleIsDiffRes()
-                }
-
-                function handleAddToCart() {
-                    const isAdded = cartData.some((data) => data.id === info.id);
-                    if (!isAdded) {
-                        if (getResInfoFromLocalStorage.name === resInfo.name || getResInfoFromLocalStorage.length === 0) {
-                            dispatch(addToCart({ info, resInfo }))
-                            toast.success("Item added to cart succesfully!")
-                        }
-                        else {
-                            handleIsDiffRes()
-                        }
-                    } else {
-                        toast.error("Item already added to Cart!")
-                    }
                 }
 
                 const key = `item-${index}`;
@@ -212,7 +196,7 @@ function DetailMenu({ itemCards, resInfo }) {
                     <div key={key} className='relative'>
                         <div className='flex w-full justify-between min-h-[182px]'>
                             <div className='w-[60%] md:w-[70%]'>
-                                <img className='w-5' src={vegClassifier === "veg" ? veg : nonVeg} alt="" />
+                                <img className='w-5' src={itemAttribute && itemAttribute.vegClassifier === "veg" ? veg : nonVeg} alt="" />
                                 <h2 className='font-bold text-lg'>{name}</h2>
                                 <p className='font-bold text-lg italic'>₹ {defaultPrice / 100 || price / 100}</p>
                                 {trimDes && (
@@ -220,7 +204,7 @@ function DetailMenu({ itemCards, resInfo }) {
                                         <span className='line-clamp-2 md:line-clamp-none'>{showMore ? description : trimDes}</span>
                                         {trimDes.length >= 50 && (
                                             <button
-                                            
+
                                                 onClick={() => setShowMore(!showMore)}
                                                 className="hidden md:block cursor-pointer mx-1 font-bold text-gray-600"
                                             >
@@ -234,22 +218,20 @@ function DetailMenu({ itemCards, resInfo }) {
                                 {imageId &&
                                     <img className='rounded-xl' src={`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_300,h_300,c_fit/${imageId}`} alt="" />
                                 }
-                                <button onClick={handleAddToCart} className={`bg-slate-100 text-lg left-1/2 -translate-x-1/2 font-bold border px-10 text-green-600 hover:cursor-pointer shadow-2xl shadow-slate-600 rounded-xl absolute py-2 ${imageId ? 'bottom-[-20px]' : 'top-[30px]'}`}> ADD </button>
+                                <AddToCartButton info={info} resInfo={resInfo} handleIsDiffRes={handleIsDiffRes} />
                             </div>
                         </div>
                         <hr className='my-10 text-slate-300 border-1' />
-                        {
-                            isDiffRes && (
-                                <div className='w-[520px] h-[204px] left-[33%] p-6 bg-white z-50 bottom-10 shadow-xl shadow-slate-500 fixed'>
-                                    <h1 className='font-bold mb-2 text-xl'>Items already in Cart</h1>
-                                    <p>Your cart contains items from other restaurant. Would you like to reset your cart for adding items from this restaurant?</p>
-                                    <div className='flex justify-between w-full mt-5'>
-                                        <button onClick={handleIsDiffRes} className='text-green-600 border-2 hover:cursor-pointer font-semibold w-[48%] border-green-600 py-2'>NO</button>
-                                        <button onClick={clearCartAndAddNewItem} className='text-white w-[48%] hover:cursor-pointer font-semibold bg-green-600 py-2'>Yest Start Afresh</button>
-                                    </div>
+                        {isDiffRes && (
+                            <div className='w-[520px] h-[204px] left-[33%] p-6 bg-white z-50 bottom-10 shadow-xl shadow-slate-500 fixed'>
+                                <h1 className='font-bold mb-2 text-xl'>Items already in Cart</h1>
+                                <p>Your cart contains items from other restaurant. Would you like to reset your cart for adding items from this restaurant?</p>
+                                <div className='flex justify-between w-full mt-5'>
+                                    <button onClick={handleIsDiffRes} className='text-green-600 border-2 hover:cursor-pointer font-semibold w-[48%] border-green-600 py-2'>NO</button>
+                                    <button onClick={clearCartAndAddNewItem} className='text-white w-[48%] hover:cursor-pointer font-semibold bg-green-600 py-2'>Yest Start Afresh</button>
                                 </div>
-                            )
-                        }
+                            </div>
+                        )}
                     </div>
                 );
             })}
