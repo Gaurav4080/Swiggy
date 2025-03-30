@@ -5,7 +5,8 @@ const toggleSlice = createSlice({
     initialState: {
         searchBarToggle: false,
         logInToggle: false,
-        isDiffRes: false
+        isDiffRes: false,
+        isSimiliarResDishes: false,
     },
     reducers: {
         toggleSearchBar: (state) => {
@@ -16,9 +17,12 @@ const toggleSlice = createSlice({
         },
         toggleDiffRes: (state) => {
             state.isDiffRes = !state.isDiffRes
+        },
+        toggleSimilarResDishes: (state) => {
+            state.isSimiliarResDishes = !state.isSimiliarResDishes
         }
     }
 })
 
-export const { toggleSearchBar, toggleLogIn, toggleDiffRes } = toggleSlice.actions;
+export const { toggleSearchBar, toggleLogIn, toggleDiffRes, toggleSimilarResDishes } = toggleSlice.actions;
 export default toggleSlice.reducer;
