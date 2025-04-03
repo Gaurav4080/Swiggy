@@ -85,20 +85,12 @@ function Dishes({
             </div>
 
             {isDiffRes && (
-                <div className='w-[520px] h-[204px] left-[33%] p-6 bg-white z-50 bottom-10 shadow-xl shadow-slate-500 fixed'>
+                <div className='w-[520px] h-[204px] left-[33%] p-6 bg-white z-50 bottom-10 border-2 fixed'>
                     <h1 className='font-bold mb-2 text-xl'>Items already in Cart</h1>
                     <p>Your cart contains items from another restaurant. Would you like to reset your cart to add items from this restaurant?</p>
                     <div className='flex justify-between w-full mt-5'>
-                        <button
-                            onClick={handleIsDiffRes}
-                            className='text-green-600 border-2 hover:cursor-pointer font-semibold w-[48%] border-green-600 py-2'>
-                            NO
-                        </button>
-                        <button
-                            onClick={clearCartAndAddNewItem}
-                            className='text-white w-[48%] hover:cursor-pointer font-semibold bg-green-600 py-2'>
-                            Yes, Start Fresh
-                        </button>
+                        <button onClick={handleIsDiffRes} className='text-green-600 border-2 hover:cursor-pointer font-semibold w-[48%] border-green-600 py-2'> NO </button>
+                        <button onClick={clearCartAndAddNewItem} className='text-white w-[48%] hover:cursor-pointer font-semibold bg-green-600 py-2'> Yes, Start Fresh </button>
                     </div>
                 </div>
             )}

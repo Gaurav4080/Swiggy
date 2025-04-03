@@ -180,7 +180,7 @@ function DetailMenu({ itemCards, resInfo }) {
                 const dispatch = useDispatch()
 
                 function handleIsDiffRes() {
-                    dispatch(toggleDiffRes)
+                    dispatch(toggleDiffRes())
                 }
 
                 function clearCartAndAddNewItem() {
@@ -223,7 +223,7 @@ function DetailMenu({ itemCards, resInfo }) {
                         </div>
                         <hr className='my-10 text-slate-300 border-1' />
                         {isDiffRes && (
-                            <div className='w-[520px] h-[204px] left-[33%] p-6 bg-white z-50 bottom-10 shadow-xl shadow-slate-500 fixed'>
+                            <div className='w-[520px] h-[204px] left-[33%] p-6 bg-white z-50 bottom-10 border-2 fixed'>
                                 <h1 className='font-bold mb-2 text-xl'>Items already in Cart</h1>
                                 <p>Your cart contains items from other restaurant. Would you like to reset your cart for adding items from this restaurant?</p>
                                 <div className='flex justify-between w-full mt-5'>

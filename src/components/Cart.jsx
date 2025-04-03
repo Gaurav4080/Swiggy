@@ -52,9 +52,9 @@ function Cart() {
     return (
         <div className='w-full'>
             <div className='w-[95%] md:w-[800px] mx-auto'>
-                <div className='flex justify-between p-10'>
-                    <img className='rounded-xl' src={`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_300,h_300,c_fit/${resInfo.cloudinaryImageId}`} alt="" />
-                    <div className='mt-15 mr-20'>
+                <div className='flex p-10'>
+                    <img className='rounded-xl mr-10' src={`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_300,h_300,c_fit/${resInfo.cloudinaryImageId}`} alt="" />
+                    <div className='mt-5 mr-20'>
                         <p className='text-5xl border-b-2 border-black pb-3'>{resInfo.name}</p>
                         <p className='mt-3 text-xl'>{resInfo.areaName} {resInfo.avgRating}</p>
                         <p className='flex items-center mt-1 gap-1 font-bold text-green-700'><i className="fi fi-ss-circle-star mt-1 text-green-600 text-lg"></i> {resInfo.avgRating}<span className='mb-2 text'> . </span><span>{resInfo?.sla?.slaString}</span></p>
