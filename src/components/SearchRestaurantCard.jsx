@@ -19,9 +19,9 @@ function SearchRestaurantCard({
     }
   }
 }) {
-  return (<div className='bg-white m-4 p-2 flex gap-5 items-center md:max-w-fit'>
+  return (<div className='bg-white m-4 p-3 flex gap-5 items-center md:max-w-fit'>
     <div className='w-[30%]'>
-      <img className='aspect-square rounded-lg ' src={`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_264,h_324,c_fill/${cloudinaryImageId}`} alt="" />
+      <img className='aspect-square rounded-lg w-[300px]' src={`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_264,h_324,c_fill/${cloudinaryImageId}`} alt="" />
     </div>
     <div className='w-[60%]'>
       <p className='font-bold'>{name}</p>
