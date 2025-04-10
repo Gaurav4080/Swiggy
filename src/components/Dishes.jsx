@@ -18,7 +18,6 @@ function Dishes({
 }) {
     const { imageId = "", name, price, isVeg = 0 } = info;
     const { id, name: resName, avgRating, sla: { slaString } } = resInfo;
-
     const isDiffRes = useSelector((state) => state.toggleSlice.isDiffRes);
     const { id: cartResId } = useSelector((state) => state.cartSlice.resInfo)
     const dispatch = useDispatch();

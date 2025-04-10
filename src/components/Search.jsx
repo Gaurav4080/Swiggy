@@ -28,18 +28,16 @@ function Search() {
 
     useEffect(() => {
         if (isSimiliarResDishes) {
-            fetchSimilarRestaurantDishes()
+            fetchSimilarRestaurantDishes();
         }
     }, [isSimiliarResDishes])
-
 
     async function fetchSimilarRestaurantDishes() {
         let data = await fetch(`https://www.swiggy.com/dapi/restaurants/search/v3?lat=${lat}&lng=${lng}&str=Pizza&trackingId=undefined&submitAction=SUGGESTION&selectedPLTab=dish-add&restaurantMenuUrl=%2Fcity%2Fpune%2Fpizza-hut-hinjewadi-rest14780%3Fquery%3DPizza&restaurantIdOfAddedItem=14780&itemAdded=96199183`);
         let res = await data.json();
+        console.log(res)
         setSelectedResDish(res?.data?.cards[1]);
         setSimilarResDishes(res?.data?.cards[2]?.card?.card?.cards)
-        console.log(res?.data?.cards[1])
-        console.log(res?.data?.cards[2]?.card?.card?.groupBy?.card)
         dispatch(toggleSimilarResDishes());
     }
 
@@ -92,9 +90,9 @@ function Search() {
             {
                 !selectedResDish &&
                 <div className="my-4 flex flex-wrap gap-3">
-                    {filterOptions.map((option) => (
+                    {filterOptions.map((option, index) => (
                         <button
-                            key={option.filterName}
+                            key={index}
                             onClick={() => handleFilterBtn(option.filterName)}
                             className={`border hover:cursor-pointer shadow-2xl p-1 px-2 flex gap-1 text-[15px] rounded-xl font-semibold 
                     ${activeButton === option.filterName ? "bg-slate-600 text-white border-slate-400" : "bg-slate-100 border-slate-200"}`}
@@ -104,8 +102,6 @@ function Search() {
                     ))}
                 </div>
             }
-
-
 
             <div className='w-full md:w-[800px] mt-5 grid grid-cols-1 md:grid-cols-2 bg-slate-100'>
                 {
@@ -117,8 +113,8 @@ function Search() {
                     
                     </> :
                         activeButton === "Dishes"
-                            ? dishes.map((data) => <Dishes key={data?.id} data={data} />)
-                            : restaurantData.map((data) => <SearchRestaurantCard key={data?.id} data={data} />)
+                            ? dishes.map((data, index) => <Dishes key={index} data={data} />)
+                            : restaurantData.map((data, index) => <SearchRestaurantCard key={index} data={data} />)
                 }
             </div>
         </div>
