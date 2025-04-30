@@ -7,15 +7,17 @@ import { clearCartData } from '../utils/cartSlice';
 import toast from 'react-hot-toast';
 
 function Dishes({
-    data: {
-        card: {
-            card: {
-                info,
-                restaurant: { info: resInfo }
-            }
-        }
-    }
+    // data: {
+    //     info,
+    //     restaurant: { info: resInfo }
+    // }
+    data
 }) {
+    const  {
+        info,
+        restaurant: { info: resInfo }
+    } = data;
+
     const { imageId = "", name, price, isVeg = 0 } = info;
     const { id, name: resName, avgRating, sla: { slaString } } = resInfo;
     const isDiffRes = useSelector((state) => state.toggleSlice.isDiffRes);

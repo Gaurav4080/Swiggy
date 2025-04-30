@@ -35,7 +35,6 @@ function Search() {
     async function fetchSimilarRestaurantDishes() {
         let data = await fetch(`https://www.swiggy.com/dapi/restaurants/search/v3?lat=${lat}&lng=${lng}&str=Pizza&trackingId=undefined&submitAction=SUGGESTION&selectedPLTab=dish-add&restaurantMenuUrl=%2Fcity%2Fpune%2Fpizza-hut-hinjewadi-rest14780%3Fquery%3DPizza&restaurantIdOfAddedItem=14780&itemAdded=96199183`);
         let res = await data.json();
-        console.log(res)
         setSelectedResDish(res?.data?.cards[1]);
         setSimilarResDishes(res?.data?.cards[2]?.card?.card?.cards)
         dispatch(toggleSimilarResDishes());
@@ -68,10 +67,10 @@ function Search() {
     }
 
     useEffect(() => {
-        if(searchQuery === ""){
+        if (searchQuery === "") {
             return
         }
-        
+
         setSearchQuery("")
         fetchDishes()
         fetchRestaurantData()
@@ -105,15 +104,17 @@ function Search() {
 
             <div className='w-full md:w-[800px] mt-5 grid grid-cols-1 md:grid-cols-2 bg-slate-100'>
                 {
-                    selectedResDish ? 
-                    <>
-                    <p>Item added to Cart</p>
-                    <Dishes data={selectedResDish}/>
-                    <p>More Dishes from this Restaurant</p>
-                    
-                    </> :
+                    selectedResDish ?
+                        <>
+                            <p>Item added to Cart</p>
+                            <Dishes data={selectedResDish.card.card} />
+                            <p>More Dishes from this Restaurant</p>
+                            {
+                                similarResDishes.map((data) => <Dishes data={{...data.card, restaurant: selectedResDish.card.card.restaurant}} />)
+                            }
+                        </> :
                         activeButton === "Dishes"
-                            ? dishes.map((data, index) => <Dishes key={index} data={data} />)
+                            ? dishes.map((data, index) => <Dishes key={index} data={data.card.card} />)
                             : restaurantData.map((data, index) => <SearchRestaurantCard key={index} data={data} />)
                 }
             </div>

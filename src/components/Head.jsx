@@ -42,7 +42,7 @@ function Head() {
   const visible = useSelector((state) => state.toggleSlice.searchBarToggle)
   const logInvisible = useSelector((state) => state.toggleSlice.logInToggle)
   const dispatch = useDispatch()
-  const [headerLocation, setHeaderLocation] = useState("Others")
+  const [headerLocation, setHeaderLocation] = useState("Noida")
 
   function handleVisbility() {
     dispatch(toggleSearchBar());
