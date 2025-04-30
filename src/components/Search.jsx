@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Dishes from './Dishes';
 import SearchRestaurantCard from './SearchRestaurantCard';
-import { toggleSimilarResDishes } from '../utils/toggleSlice';
 
 function Search() {
 
@@ -13,31 +12,13 @@ function Search() {
         { filterName: "Dishes" },
     ];
 
-    const isSimiliarResDishes = useSelector((state) => state.toggleSlice.isSimiliarResDishes);
     const [activeButton, setActiveButton] = useState("Dishes");
     const [dishes, setDishes] = useState([])
     const [restaurantData, setRestaurantData] = useState([])
-    const [selectedResDish, setSelectedResDish] = useState(null)
-    const [similarResDishes, setSimilarResDishes] = useState([])
     const { lat, lng } = useSelector((state) => state.coordSlice);
-    const dispatch = useDispatch();
 
     function handleFilterBtn(filterName) {
         setActiveButton(prev => (prev === filterName ? activeButton : filterName));
-    }
-
-    useEffect(() => {
-        if (isSimiliarResDishes) {
-            fetchSimilarRestaurantDishes();
-        }
-    }, [isSimiliarResDishes])
-
-    async function fetchSimilarRestaurantDishes() {
-        let data = await fetch(`https://www.swiggy.com/dapi/restaurants/search/v3?lat=${lat}&lng=${lng}&str=Pizza&trackingId=undefined&submitAction=SUGGESTION&selectedPLTab=dish-add&restaurantMenuUrl=%2Fcity%2Fpune%2Fpizza-hut-hinjewadi-rest14780%3Fquery%3DPizza&restaurantIdOfAddedItem=14780&itemAdded=96199183`);
-        let res = await data.json();
-        setSelectedResDish(res?.data?.cards[1]);
-        setSimilarResDishes(res?.data?.cards[2]?.card?.card?.cards)
-        dispatch(toggleSimilarResDishes());
     }
 
     async function fetchDishes() {
@@ -46,7 +27,6 @@ function Search() {
         let finalData = res?.data?.cards?.[1]?.groupedCard?.cardGroupMap?.DISH?.cards || [];
         finalData = finalData.filter(data => data?.card?.card?.info);
         setDishes(finalData);
-
     }
 
     async function fetchRestaurantData() {
@@ -61,7 +41,6 @@ function Search() {
         let val = e.target.value
         if (e.keyCode == 13) {
             setSearchQuery(val)
-            setSelectedResDish(null)
             setDishes([])
         }
     }
@@ -87,7 +66,6 @@ function Search() {
             />
 
             {
-                !selectedResDish &&
                 <div className="my-4 flex flex-wrap gap-3">
                     {filterOptions.map((option, index) => (
                         <button
@@ -104,18 +82,9 @@ function Search() {
 
             <div className='w-full md:w-[800px] mt-5 grid grid-cols-1 md:grid-cols-2 bg-slate-100'>
                 {
-                    selectedResDish ?
-                        <>
-                            <p>Item added to Cart</p>
-                            <Dishes data={selectedResDish.card.card} />
-                            <p>More Dishes from this Restaurant</p>
-                            {
-                                similarResDishes.map((data) => <Dishes data={{...data.card, restaurant: selectedResDish.card.card.restaurant}} />)
-                            }
-                        </> :
-                        activeButton === "Dishes"
-                            ? dishes.map((data, index) => <Dishes key={index} data={data.card.card} />)
-                            : restaurantData.map((data, index) => <SearchRestaurantCard key={index} data={data} />)
+                    activeButton === "Dishes"
+                        ? dishes.map((data, index) => <Dishes key={index} data={data.card.card} />)
+                        : restaurantData.map((data, index) => <SearchRestaurantCard key={index} data={data} />)
                 }
             </div>
         </div>
