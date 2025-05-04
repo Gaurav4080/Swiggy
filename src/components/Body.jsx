@@ -20,8 +20,17 @@ function Body() {
             );
             const result = await response.json();
             setUnserviceableData(result?.data);
-            setRestaurantData(result?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants || []);
-            setCusineData(result?.data?.cards[0]?.card?.card?.imageGridCards?.info || []);
+            let maindata = result?.data?.cards.find(
+                (data) => data?.card?.card?.id === "top_brands_for_you"
+            )?.card?.card?.gridElements?.infoWithStyle?.restaurants;
+            let maindata2 = result?.data?.cards.find(
+                (data) => data?.card?.card?.id === "restaurant_grid_listing_v2"
+            )?.card?.card?.gridElements?.infoWithStyle?.restaurants;
+            setRestaurantData(maindata || maindata2);
+            let data2 = result?.data?.cards.find(
+                (data) => data?.card?.card?.id === "whats_on_your_mind"
+            ).card?.card?.imageGridCards?.info;
+            setCusineData(data2);
             setTopRestaurantTitle(result?.data?.cards[1]?.card?.card?.header?.title || "");
             setOnlineRestaurantTitle(result?.data?.cards[2]?.card?.card?.title || "");
         } catch (error) {
@@ -74,8 +83,13 @@ function Body() {
     return (
         <div className="w-full">
             <div className="w-[90%] mx-auto mt-2 overflow-hidden">
-                <Cusines data={cusineData} />
-                <TopRestaurants data={restaurantData} title={topRestaurantTitle} />
+                {
+                    cusineData.length ?
+                    <>
+                        <Cusines data={cusineData} />
+                        <TopRestaurants data={restaurantData} title={topRestaurantTitle} />
+                    </> : ""
+                }
                 <OnlineRestaurants data={filterVal ? filteredData : restaurantData} title={onlineRestaurantTitle} />
             </div>
         </div>
