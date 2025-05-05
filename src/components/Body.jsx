@@ -3,6 +3,7 @@ import Cusines from "./Cusines";
 import TopRestaurants from "./TopRestaurants";
 import OnlineRestaurants from "./OnlineRestaurants";
 import { useSelector } from "react-redux";
+import Shimmer from "./Shimmer";
 
 function Body() {
     const [restaurantData, setRestaurantData] = useState([]);
@@ -64,7 +65,7 @@ function Body() {
         });
     }, [filterVal, restaurantData]);
 
-    if (unserviceableData?.communication) {
+    if (unserviceableData?.communication || unserviceableData.tid === "") {
         return (
             <div className="flex flex-col items-center justify-center min-h-[60vh] text-center p-6">
                 <img
@@ -82,16 +83,20 @@ function Body() {
 
     return (
         <div className="w-full">
-            <div className="w-[90%] mx-auto mt-2 overflow-hidden">
-                {
-                    cusineData.length ?
-                    <>
-                        <Cusines data={cusineData} />
-                        <TopRestaurants data={restaurantData} title={topRestaurantTitle} />
-                    </> : ""
-                }
-                <OnlineRestaurants data={filterVal ? filteredData : restaurantData} title={onlineRestaurantTitle} />
-            </div>
+            {
+                restaurantData.length ? (
+                    <div className="w-[90%] mx-auto mt-2 overflow-hidden">
+                        {
+                            cusineData.length ?
+                                <>
+                                    <Cusines data={cusineData} />
+                                    <TopRestaurants data={restaurantData} title={topRestaurantTitle} />
+                                </> : ""
+                        }
+                        <OnlineRestaurants data={filterVal ? filteredData : restaurantData} title={onlineRestaurantTitle} />
+                    </div>
+                ) : <Shimmer />
+            }
         </div>
     );
 }
