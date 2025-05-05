@@ -1,4 +1,7 @@
 import React, { useState } from 'react'
+import { setSearchQuery } from '../utils/searchSlice'
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 
 function Cusines({ data }) {
 
@@ -10,6 +13,14 @@ function Cusines({ data }) {
 
     function handlePrev() {
         value <= 0 ? "" : setvalue((prev) => prev - 32)
+    }
+
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+
+    function searchCusine(cuisineName) {
+        dispatch(setSearchQuery(cuisineName))
+        navigate('/search')
     }
 
     return (
@@ -28,9 +39,7 @@ function Cusines({ data }) {
             <div
                 style={{ translate: `-${value}%` }}
                 className={`flex my-3 duration-300`}>
-                {data.map((item) => (
-                    <img key={item.imageId} className='w-20 md:w-40 hover:scale-80 hover:cursor-pointer duration-300' src={`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_288,h_360/${item.imageId}`} alt="" />
-                ))}
+                {data.map((item) => (<img onClick={() => searchCusine(item?.action?.text)} key={item.imageId} className='w-20 md:w-40 hover:scale-80 hover:cursor-pointer duration-300' src={`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_288,h_360/${item.imageId}`} alt="" />))}
             </div>
             <hr className='border text-gray-300' />
         </div>

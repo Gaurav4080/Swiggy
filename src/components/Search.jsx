@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import Dishes from './Dishes';
 import SearchRestaurantCard from './SearchRestaurantCard';
+import { setSearchQuery } from '../utils/searchSlice';
 
 function Search() {
 
-    const [searchQuery, setSearchQuery] = useState("")
-
+    const searchQuery = useSelector((state) => state.searchSlice.query)
     const filterOptions = [
         { filterName: "Restaurants" },
         { filterName: "Dishes" },
@@ -49,8 +49,6 @@ function Search() {
         if (searchQuery === "") {
             return
         }
-
-        setSearchQuery("")
         fetchDishes()
         fetchRestaurantData()
     }, [searchQuery])
@@ -61,7 +59,7 @@ function Search() {
             <input
                 onKeyDown={handleSearchQuery}
                 type="text"
-                placeholder="Search for Restaurants and Food!"
+                placeholder={searchQuery ? searchQuery : "Search for Restaurants and Food!"}
                 className="w-full rounded-xl mt-10 border p-3 bg-slate-100 font-semibold focus:outline-none focus:shadow-lg"
             />
 

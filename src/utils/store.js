@@ -4,6 +4,7 @@ import cartSlice from "./cartSlice"
 import coordSlice from "./coordSlice";
 import filterSlice from "./filterSlice";
 import authSlice from "./authSlice";
+import searchSlice from "./searchSlice";
 
 const store = configureStore({
     reducer : {
@@ -11,7 +12,8 @@ const store = configureStore({
         cartSlice,
         coordSlice,
         filterSlice,
-        authSlice
+        authSlice,
+        searchSlice
     }
 })
 
