@@ -141,10 +141,10 @@ function Head() {
                     <div key={data.name} className='hover:text-orange-700' onClick={handleLogin}>
                       <div className='flex items-center hover:cursor-pointer gap-2'>
                         {
-                          userData && 
+                          userData &&
                           <div className='flex gap-2'>
-                            <i className={`mt-1 fi font-semibold ${data.image}`}></i>
-                            <p className='mt-1 font-semibold'>{userData.name.split(" ")[0]}</p>
+                            <img src={userData.photo} className="w-8 h-8 rounded-full object-cover mt-1" />
+                            <p className='mt-2 font-semibold'>{userData.name.split(" ")[0]}</p>
                           </div>
                         }
                         <p className='text-l font-semibold'>{userData ? "" : data.name}</p>
