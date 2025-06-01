@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Dishes from './Dishes';
 import SearchRestaurantCard, { withHOC } from './SearchRestaurantCard';
 import { setSearchQuery } from '../utils/searchSlice';
 
 function Search() {
+
+    const dispatch = useDispatch();
 
     const searchQuery = useSelector((state) => state.searchSlice.query)
     const filterOptions = [
@@ -40,10 +42,10 @@ function Search() {
     }
 
     function handleSearchQuery(e) {
-        let val = e.target.value
-        if (e.keyCode == 13) {
-            setSearchQuery(val)
-            setDishes([])
+        let val = e.target.value;
+        if (e.keyCode === 13) {
+            dispatch(setSearchQuery(val));
+            setDishes([]);
         }
     }
 
