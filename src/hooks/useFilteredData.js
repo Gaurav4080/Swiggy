@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 
 function useFilteredData(restaurantData, filterVal) {
     const filteredData = useMemo(() => {

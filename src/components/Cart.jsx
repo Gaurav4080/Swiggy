@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { clearCartData, deleteItem } from '../utils/cartSlice';
 import toast from 'react-hot-toast';
 import { toggleLogIn } from '../utils/toggleSlice';

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import RestaurantCard from './RestaurantCard'
 
 function TopRestaurants({ data, title }) {

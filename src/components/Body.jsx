@@ -1,4 +1,3 @@
-import React from "react";
 import Cusines from "./Cusines";
 import TopRestaurants from "./TopRestaurants";
 import OnlineRestaurants from "./OnlineRestaurants";
@@ -11,10 +10,6 @@ function Body() {
 
     const [restaurantData, cusineData, unserviceableData, topRestaurantTitle, onlineRestaurantTitle, filterVal, isLoading] = useRestauranrsData();
     const filteredData = useFilteredData(restaurantData, filterVal);
-
-    // if (unserviceableData?.communication || unserviceableData.tid === "") {
-    //     return <UnserviceableLocation />
-    // }
 
     if (isLoading) {
         return <Shimmer />;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import RestaurantCard from './RestaurantCard'
 import { useDispatch } from 'react-redux';
 import { setFilterValue } from '../utils/filterSlice';

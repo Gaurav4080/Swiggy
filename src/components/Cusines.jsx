@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { setSearchQuery } from '../utils/searchSlice'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'

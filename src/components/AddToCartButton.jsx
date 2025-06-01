@@ -1,4 +1,3 @@
-import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { addToCart } from '../utils/cartSlice'
 import toast from 'react-hot-toast'
