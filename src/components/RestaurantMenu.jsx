@@ -1,61 +1,19 @@
-import { useState, useEffect } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { clearCartData } from '../utils/cartSlice'
 import toast from 'react-hot-toast'
 import AddToCartButton from './AddToCartButton'
 import { toggleDiffRes } from '../utils/toggleSlice'
 import { MenuShimmer } from './Shimmer'
+import useRestaurantsMenuData from '../hooks/useRestaurantsMenuData'
 
 let veg = "https://www.pngkey.com/png/detail/261-2619381_chitr-veg-symbol-svg-veg-and-non-veg.png"
 let nonVeg = "https://www.pngkey.com/png/full/245-2459071_non-veg-icon-non-veg-symbol-png.png"
 
 function RestaurantMenu() {
-    const { id } = useParams();
-    let mainId = id.split("-").at(-1).split("t").at(-1);
-
-    const [resInfo, setResInfo] = useState([])
-    const [discountData, setDiscountData] = useState([])
-    const [topPicksData, setTopPicksData] = useState(null);
-    const [menuData, setMenuData] = useState([])
-    const [value, setValue] = useState(0)
-
-    function handleNext() {
-        value >= 90 ? "" : setValue((prev) => prev + 38)
-    }
-
-    function handlePrev() {
-        value <= 0 ? "" : setValue((prev) => prev - 38)
-    }
-
-    async function fetchMenu() {
-        const data = await fetch(`https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=28.5355161&lng=77.3910265&restaurantId=${mainId}&catalog_qa=undefined&submitAction=ENTER`)
-        const result = await data.json()
-        const resInfo = result?.data?.cards.find((data) =>
-            data?.card?.card?.["@type"].includes("food.v2.Restaurant")
-        )?.card?.card?.info;
-        const discountInfo = result?.data?.cards.find((data) =>
-            data?.card?.card?.["@type"].includes("v2.GridWidget")
-        )?.card?.card?.gridElements?.infoWithStyle?.offers;
-        setResInfo(resInfo)
-        setDiscountData(discountInfo)
-        let actualMenu = result?.data?.cards.find((data) => data?.groupedCard);
-        setTopPicksData(
-            (actualMenu?.groupedCard?.cardGroupMap?.REGULAR?.cards).filter(
-                (data) => data.card.card.title == "Top Picks"
-            )[0]
-        );
-        setMenuData(
-            actualMenu?.groupedCard?.cardGroupMap?.REGULAR?.cards.filter(
-                (data) =>
-                    data?.card?.card?.itemCards || data?.card?.card?.categories
-            )
-        );
-    }
-
-    useEffect(() => {
-        fetchMenu();
-    }, [])
+    
+    const [resInfo, discountData, menuData, value, handleNext, handlePrev] = useRestaurantsMenuData();
 
     return (
         <div className='w-full'>
