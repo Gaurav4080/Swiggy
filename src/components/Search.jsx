@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import Dishes from './Dishes';
-import SearchRestaurantCard from './SearchRestaurantCard';
+import SearchRestaurantCard, { withHOC } from './SearchRestaurantCard';
 import { setSearchQuery } from '../utils/searchSlice';
 
 function Search() {
@@ -16,6 +16,8 @@ function Search() {
     const [dishes, setDishes] = useState([])
     const [restaurantData, setRestaurantData] = useState([])
     const { lat, lng } = useSelector((state) => state.coordSlice);
+
+    const PromotedRestaurant = withHOC(SearchRestaurantCard)
 
     function handleFilterBtn(filterName) {
         setActiveButton(prev => (prev === filterName ? activeButton : filterName));
@@ -82,7 +84,9 @@ function Search() {
                 {
                     activeButton === "Dishes"
                         ? dishes.map((data, index) => <Dishes key={index} data={data.card.card} />)
-                        : restaurantData.map((data, index) => <SearchRestaurantCard key={index} data={data} />)
+                        : restaurantData.map((data, index) => (
+                            data?.card?.card?.info?.promoted ? <PromotedRestaurant data={data} /> : <SearchRestaurantCard key={index} data={data} />
+                        ))
                 }
             </div>
         </div>

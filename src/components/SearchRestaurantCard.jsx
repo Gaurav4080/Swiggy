@@ -36,3 +36,13 @@ function SearchRestaurantCard({
 }
 
 export default SearchRestaurantCard;
+
+export function withHOC(WrappedComponent) {
+  return (props) => {
+    console.log(props)
+    return <div className='relative'>
+      <p className='absolute top-10 text-sm font-bold bg-gray-700 px-1 rounded-md left-5 text-white'>AD</p>
+      <WrappedComponent {...props} />
+    </div>;
+  }
+}
