@@ -87,7 +87,7 @@ function Search() {
                     activeButton === "Dishes"
                         ? dishes.map((data, index) => <Dishes key={index} data={data.card.card} />)
                         : restaurantData.map((data, index) => (
-                            data?.card?.card?.info?.promoted ? <PromotedRestaurant data={data} /> : <SearchRestaurantCard key={index} data={data} />
+                            data?.card?.card?.info?.promoted ? <PromotedRestaurant key={index} data={data} /> : <SearchRestaurantCard key={index} data={data} />
                         ))
                 }
             </div>

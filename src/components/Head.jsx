@@ -93,7 +93,7 @@ function Head() {
                           <p className="text-sm opacity-65">{data.structured_formatting.secondary_text}</p>
                         </li>
                       </div>
-                      {!isLast && <p className="opacity-40">-------------------------------------------</p>}
+                      {!isLast && <hr className="opacity-100 mt-4" />}
                     </div>
                   );
                 })}
