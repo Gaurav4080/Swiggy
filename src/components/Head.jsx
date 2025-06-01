@@ -54,7 +54,7 @@ function Head() {
 
   async function searchResultData(val) {
     if (val == "") return
-    const res = await fetch(`https://thingproxy.freeboard.io/fetch/https://www.swiggy.com/dapi/misc/place-autocomplete?input=${val}`);
+    const res = await fetch(`https://www.swiggy.com/dapi/misc/place-autocomplete?input=${val}`);
     const data = await res.json();
     setSearchResult(data?.data)
   }
@@ -62,7 +62,7 @@ function Head() {
   async function fetchlatAndLong(id) {
     if (id == "") return
     handleVisbility()
-    const res = await fetch(`https://thingproxy.freeboard.io/fetch/https://www.swiggy.com/dapi/misc/address-recommend?place_id=${id}`);
+    const res = await fetch(`https://www.swiggy.com/dapi/misc/address-recommend?place_id=${id}`);
     const data = await res.json();
     dispatch(updateCoord({
       lat: data.data[0].geometry.location.lat,
