@@ -26,7 +26,7 @@ function Search() {
     }
 
     async function fetchDishes() {
-        let data = await fetch(`https://www.swiggy.com/dapi/restaurants/search/v3?lat=${lat}&lng=${lng}&str=${searchQuery}&trackingId=undefined&submitAction=SUGGESTION&queryUniqueId=1c586c03-a7a3-455c-347a-694fa0ed34b7`);
+        let data = await fetch(`https://thingproxy.freeboard.io/fetch/https://www.swiggy.com/dapi/restaurants/search/v3?lat=${lat}&lng=${lng}&str=${searchQuery}&trackingId=undefined&submitAction=SUGGESTION&queryUniqueId=1c586c03-a7a3-455c-347a-694fa0ed34b7`);
         let res = await data.json();
         let finalData = res?.data?.cards?.[1]?.groupedCard?.cardGroupMap?.DISH?.cards || [];
         finalData = finalData.filter(data => data?.card?.card?.info);
@@ -34,7 +34,7 @@ function Search() {
     }
 
     async function fetchRestaurantData() {
-        let data = await fetch(`https://www.swiggy.com/dapi/restaurants/search/v3?lat=${lat}&lng=${lng}&str=${searchQuery}&trackingId=undefined&submitAction=SUGGESTION&queryUniqueId=1c586c03-a7a3-455c-347a-694fa0ed34b7&selectedPLTab=RESTAURANT`);
+        let data = await fetch(`https://thingproxy.freeboard.io/fetch/https://www.swiggy.com/dapi/restaurants/search/v3?lat=${lat}&lng=${lng}&str=${searchQuery}&trackingId=undefined&submitAction=SUGGESTION&queryUniqueId=1c586c03-a7a3-455c-347a-694fa0ed34b7&selectedPLTab=RESTAURANT`);
         let res = await data.json();
         let finalData = res?.data?.cards?.[0]?.groupedCard?.cardGroupMap?.RESTAURANT?.cards || [];
         finalData = finalData.filter(data => data?.card?.card?.info);
